@@ -24,15 +24,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install pyinstaller PyPDF2 PyQt5
 
-    - name: Check contents of workspace
-      run: |
-        ls
-        cd build
-        ls
-
     - name: Build with pyinstaller
       run: |
-        pyinstaller program.py
+        pyinstaller Program.py
 
     - name: Check contents of workspace
       run: |
