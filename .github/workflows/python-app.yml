@@ -26,6 +26,7 @@ jobs:
     - name: Build with pyinstaller
       run: |
         pyinstaller program.py
+        zip -r release.zip .
 
     - name: Create Release
       id: create_release
