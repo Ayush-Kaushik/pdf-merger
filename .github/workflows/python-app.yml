@@ -26,6 +26,10 @@ jobs:
     - name: Build with pyinstaller
       run: |
         pyinstaller program.py
+
+    - name: Check contents of workspace
+      run: |
+        ls -la
     
     - name: Zip the build artifacts
       run: 7z x release.zip .
