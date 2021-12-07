@@ -29,7 +29,7 @@ jobs:
 
     - name: Check contents of workspace
       run: |
-        ls -la
+        ls
     
     - name: Zip the build artifacts
       run: 7z x release.zip .
