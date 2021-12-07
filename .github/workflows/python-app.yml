@@ -30,9 +30,11 @@ jobs:
     - name: Check contents of workspace
       run: |
         ls
+        cd build
+        ls
     
     - name: Zip the build artifacts
-      run: 7z x release.zip .
+      run: 7z x release.zip build
 
     - name: Create Release
       id: create_release
