@@ -24,6 +24,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install pyinstaller PyPDF2 PyQt5
 
+    - name: Check contents of workspace
+      run: |
+        ls
+
     - name: Build with pyinstaller
       run: |
         pyinstaller build.spec
