@@ -3,7 +3,7 @@
 block_cipher = None
 
 a = Analysis(['Program.py'],
-             pathex=['./'],
+             pathex=['.\\'],
              binaries=[],
              datas=[('', '.')],
              hiddenimports=[],
