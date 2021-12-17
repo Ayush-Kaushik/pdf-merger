@@ -25,4 +25,4 @@ I have to upload my sensitive PDF documents just to merge them. Hence, the idea 
 - Finally, at the bottom, we have two buttons: `Merge` and `Cancel`.
 - When user clicks on merge, the merging process will start and file named `merged.pdf` will be placed in 
 the location specified by user
-- When user presses `cancel`, the application is reset so user can perform the merge operation on new set of files again.
+- When user presses `Cancel`, the application is reset so user can perform the merge operation on new set of files again.
