@@ -3,7 +3,7 @@
 block_cipher = None
 
 a = Analysis(['Program.py'],
-             pathex=['D:\\a\\pdf-merger\\pdf-merger\\build'],
+             pathex=[''],
              binaries=[],
              datas=[('', '.')],
              hiddenimports=[],
