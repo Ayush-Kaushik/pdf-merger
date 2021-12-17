@@ -39,7 +39,7 @@ jobs:
         ls
     
     - name: Zip the build artifacts
-      run: 7z a release.zip dist instruction.txt
+      run: 7z a release.zip dist instructions.txt
 
     - name: Create Release
       id: create_release
