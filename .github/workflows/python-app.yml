@@ -30,7 +30,7 @@ jobs:
 
     - name: Build with pyinstaller
       run: |
-        pyinstaller Program.spec
+        pyinstaller program_build.spec
 
     - name: Check contents of workspace
       run: |
@@ -47,8 +47,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ github.run_id }}
+        release_name: Release ${{ github.run_number }}
         draft: false
         prerelease: false
 
