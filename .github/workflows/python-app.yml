@@ -30,7 +30,7 @@ jobs:
 
     - name: Build with pyinstaller
       run: |
-        pyinstaller build.spec
+        pyinstaller Program.spec
 
     - name: Check contents of workspace
       run: |
