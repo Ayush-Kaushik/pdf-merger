@@ -3,17 +3,14 @@
 block_cipher = None
 
 a = Analysis(['Program.py'],
-             pathex=[''],
-             binaries=[],
-             datas=[('', '.')],
+             pathex=None,
+             binaries=None,
+             datas=None,
              hiddenimports=[],
-             hookspath=[],
-             runtime_hooks=[],
-             excludes=[],
-             win_no_prefer_redirects=False,
-             win_private_assemblies=False,
-             cipher=block_cipher,
-             noarchive=False)
+             hookspath=None,
+             runtime_hooks=None,
+             excludes=None,
+             cipher=block_cipher)
 
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
