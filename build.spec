@@ -1,7 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
-
 block_cipher = None
-
 a = Analysis(['Program.py'],
              pathex=None,
              binaries=None,
@@ -14,7 +12,6 @@ a = Analysis(['Program.py'],
 
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
-
 exe = EXE(pyz,
           a.scripts,
           a.binaries,
