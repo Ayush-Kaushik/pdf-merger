@@ -31,6 +31,8 @@ class DragAndDropArea(QListWidget):
         super().__init__(parent)
         self.setAcceptDrops(True)
         self.resize(600, 600)
+        self.setDragDropMode(QAbstractItemView.InternalMove)
+        self.setSelectionMode(QAbstractItemView.ExtendedSelection)
 
     def clearQueue(self):
         self.clear()
@@ -39,14 +41,14 @@ class DragAndDropArea(QListWidget):
         if event.mimeData().hasUrls():
             event.accept()
         else:
-            event.ignore()
+            return super().dragEnterEvent(event)
 
     def dragMoveEvent(self, event):
         if event.mimeData().hasUrls():
             event.setDropAction(Qt.CopyAction)
             event.accept()
         else:
-            event.ignore()
+            return super().dragMoveEvent(event)
 
     def dropEvent(self, event):
         if event.mimeData().hasUrls():
@@ -59,7 +61,7 @@ class DragAndDropArea(QListWidget):
                         PDFCollection.pdfRouteCollection.append(str(url.toLocalFile()))
                         self.addItem(str(url.toLocalFile()))
         else:
-            event.ignore()
+            return super().dropEvent(event)
 
 
 # Create a window with width that matches the width of the screen
@@ -104,8 +106,11 @@ class MergerApp(QMainWindow):
         self.dragAndDropView.clearQueue()
         
     def mergePDF(self):
-        PDFCollection.mergePDFQueue(self)
-        self.resetApp()
+        try:
+            PDFCollection.mergePDFQueue(self)
+            self.resetApp()
+        except:
+            print("exception occurred")
 
     def setScreenDimensions(self):
         screen = app.primaryScreen()
