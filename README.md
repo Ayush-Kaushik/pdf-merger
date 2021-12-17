@@ -6,7 +6,7 @@ more than one page which creates a collection of single PDF file when scanned. H
 a quick and easy tool that merges all these pdf files into single file.
 
 There are many options available online to merge PDF files but I do not trust any online "Free" source where
-I have to upload my sensitive PDF documents just to merge them. Hence, the idea formed to build my own PDF Merger desktop application.
+I have to upload my sensitive PDF documents to another site just to merge them. Hence, the idea formed to build my own PDF Merger desktop application.
 
 ### What I learned from this project?
 - Re-enforced my Python syntactical skills and tried to follow OOP approach to have extensibility in mind
