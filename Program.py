@@ -1,29 +1,36 @@
 import sys, os
+from unicodedata import numeric
 from PyPDF2 import PdfFileMerger
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-
-# Class deals with operations related to pdf creation
-class PDFCollection():
-    pdfRouteCollection = []
-    merger = PdfFileMerger()
-    targetPDFLocation = ""
-
+# Deals with operations related to pdf creation
+class PDFService:
+    def __init__(self, merger: PdfFileMerger, pdfFilePathCollection, targetFilePath: str):
+        self.merger = merger
+        self.filePathList = pdfFilePathCollection
+        self.targetFilePath = targetFilePath
+        
     def mergePDFQueue(self):
-        for file in PDFCollection.pdfRouteCollection:
-            PDFCollection.merger.append(file)
-        PDFCollection.merger.write(PDFCollection.targetPDFLocation)
+        for file in self.filePathList:
+            self.merger.append(file)
+        self.merger.write(self.targetFilePath)
             
     def clearPDFQueue(self):
-        PDFCollection.pdfRouteCollection = []
+        self.filePathList = []
 
-    def appendToPDFQueue(self, item):
-        PDFCollection.pdfRouteCollection.append(item)
+    def appendToPDFQueue(self, item: str):
+        self.filePathList.append(item)
 
-    def setOutputLocation(self, outputLocation):
-        PDFCollection.targetPDFLocation = outputLocation
+    def setTargetFilePath(self, filePath):
+        self.targetFilePath = filePath
+        
+    def getTargetFilePath(self):
+        return self.targetFilePath
+    
+    def getFilePathList(self):
+        return self.filePathList
 
 # List Widget Box which accepts multiple PDF files
 class DragAndDropArea(QListWidget):
@@ -31,9 +38,10 @@ class DragAndDropArea(QListWidget):
         super().__init__(parent)
         self.setAcceptDrops(True)
         self.resize(600, 600)
+        self.pdfService = pdfService
         self.setDragDropMode(QAbstractItemView.InternalMove)
         self.setSelectionMode(QAbstractItemView.ExtendedSelection)
-
+    
     def clearQueue(self):
         self.clear()
 
@@ -58,97 +66,91 @@ class DragAndDropArea(QListWidget):
             for url in event.mimeData().urls():
                 if url.isLocalFile():
                     if url.toString().endswith(".pdf"):
-                        PDFCollection.pdfRouteCollection.append(str(url.toLocalFile()))
+                        self.pdfService.filePathList.append(str(url.toLocalFile()))
                         self.addItem(str(url.toLocalFile()))
         else:
             return super().dropEvent(event)
 
 
-# Create a window with width that matches the width of the screen
-# On top, have a input box that is disabled but only displays the location of
-# where the file will be saved
-#
-# In the middle will be a list of pdf's that can be dragged and dropped
-# Also, it can be reordered
-#
-# At the bottom, we have two button
-# One to merge, second to clear all the input fields including dialog box
-class MergerApp(QMainWindow):
+class AppLayoutConfig:
+    def __init__(self, title: str, left: int, top: int, height: int, width: int):
+        self.title = title
+        self.left = left
+        self.top = top
+        self.width = width
+        self.height = height
+        
+class Labels:
+    CHOOSE_DIRECTORY = "Choose Directory"
+    SAVE_TO = "Save To.."
+    RESET = "RESET"
+    MERGE = "Merge"
 
-    def __init__(self):
+class ButtonFactory:
+    def create_button(self, title: str, action) -> QPushButton:
+        button = QPushButton(self)
+        button.setText(title)
+        button.clicked.connect(action)
+        return button
+
+class MergerApp(QMainWindow):
+    def __init__(self, pdfService: PDFService, config: AppLayoutConfig, labels: Labels):
         super().__init__()
-        self.title = 'PDF Merger'
-        self.left = 10
-        self.top = 10
-        self.width = 500
-        self.height = 400
+        self.config = config 
+        self.pdfService = pdfService
+        self.labels = labels 
         self.widget = QWidget(self)
         self.setCentralWidget(self.widget)
-        self.initUI()
-        layout = QHBoxLayout()
-        self.widget.setLayout(layout)
-        self.pdfCollection = PDFCollection()
-
-    def findOutputLocation(self):
+        self.initializeAppUI()
+        self.widget.setLayout(QHBoxLayout())
+        
+    def getOutputFilePath(self) -> str:
         directory = QFileDialog.getExistingDirectory(
-            None, "Choose Directory", "")
+            None, labels.CHOOSE_DIRECTORY, "")
         savedLocation = ""
         if directory != "":
-            savedLocation = directory + "/merged.pdf"
-            self.pdfCollection.setOutputLocation(savedLocation)
+            savedLocation = directory + "/merged.pdf"        
+            self.pdfService.setTargetFilePath(savedLocation)
         self.textbox.setText(savedLocation)
 
     def resetApp(self):
-        self.pdfCollection.pdfCollection = []
-        self.pdfCollection.targetPDFLocation = ""
-        self.textbox.setText(self.pdfCollection.targetPDFLocation)
-        self.pdfCollection.clearPDFQueue()
+        self.pdfService.setTargetFilePath("")
+        self.textbox.setText(self.pdfService.targetFilePath)
+        self.pdfService.clearPDFQueue()
         self.dragAndDropView.clearQueue()
-        
+    
+    # return location of merged pdf if successful
+    # otherwise return null
     def mergePDF(self):
         try:
-            PDFCollection.mergePDFQueue(self)
+            self.pdfService.mergePDFQueue()
+        except Exception as exception:
+            print(exception)
+        finally:
             self.resetApp()
-        except:
-            print("exception occurred")
 
-    def setScreenDimensions(self):
-        screen = app.primaryScreen()
-        size = screen.size()
-        self.width = size.width()
-
-    def initUI(self):
-        self.setScreenDimensions()
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
+    def initializeAppUI(self):
+        self.setWindowTitle(self.config.title)
+        self.setGeometry(self.config.left, self.config.top, self.config.width, self.config.height)
 
         # Input box that shows location of merged file
         self.textbox = QLineEdit(self)
-        self.textbox.resize((self.width - 200), 40)
+        self.textbox.resize((self.config.width - 200), 40)
 
         # Button to open dialog to select location to place merged file
-        self.button = QPushButton(self)
-        self.button.setText("Save To")
-        self.button.clicked.connect(self.findOutputLocation)
+        self.saveButton = ButtonFactory.create_button(self, "Save To", self.getOutputFilePath)
+        self.deleteButton = ButtonFactory.create_button(self, "Reset", self.resetApp)
+        self.mergeButton = ButtonFactory.create_button(self, "Merge", self.mergePDF)
 
         # PDF drag and drop area
         self.dragAndDropView = DragAndDropArea(self)
-
-        # Call To Action Buttons
-        self.deleteButton = QPushButton(self)
-        self.deleteButton.setText("Reset")
-        self.deleteButton.clicked.connect(self.resetApp)
-
-        self.mergeButton = QPushButton(self)
-        self.mergeButton.setText("Merge")
-        self.mergeButton.clicked.connect(self.mergePDF)
 
         # Setup their layouts
         self.verticalLayout = QVBoxLayout()
 
         self.horizontalBoyLayout = QHBoxLayout()
         self.horizontalBoyLayout.addWidget(self.textbox, 2)
-        self.horizontalBoyLayout.addWidget(self.button, 0)
+        self.horizontalBoyLayout.addWidget(self.saveButton, 0)
 
         self.dragAndDropAreaLayout = QHBoxLayout()
         self.dragAndDropAreaLayout.addWidget(self.dragAndDropView)
@@ -167,5 +169,10 @@ class MergerApp(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = MergerApp()
+    
+    pdfService = PDFService(PdfFileMerger(), [], "")
+    appConfig = AppLayoutConfig("PDF Merger", 10, 10, 500, 400)
+    labels = Labels()
+    
+    ex = MergerApp(pdfService, appConfig, labels)
     sys.exit(app.exec_())
