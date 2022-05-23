@@ -1,7 +1,7 @@
 <h2 align="center">PDF Merger Desktop Application 🖨️ </h2> 
 
 <p align="center"> 
-Single Page Application built using React and  <a href="http://www.boredapi.com/">bored api</a>
+Merge PDF on your laptop with ease in a safe and secure manner with PDF merger. No need to use online tools that store your personal PDF data.
 </p>
   
 ## 📝 Table of Contents  
