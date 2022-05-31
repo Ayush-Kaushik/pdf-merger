@@ -23,7 +23,7 @@ class PDFService:
         self.filePathList = []
 
     def appendToQueue(self, item: pathlib.Path):
-        self.filePathList.append(item)
+        self.filePathList.append(str(item.toLocalFile()))
 
     def setTargetFilePath(self, filePath):
         self.targetFilePath = filePath
