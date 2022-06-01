@@ -8,6 +8,7 @@ from src.views.ButtonFactory import ButtonFactory
 from src.config.AppLayoutConfig import AppLayoutConfig
 from src.views.DragAndDropArea import DragAndDropArea
 from src.views.Labels import Labels
+from src.exceptions.InvalidExtensionError import InvalidExtensionError
 
 
 class ImageToPDFMergeView():
@@ -60,7 +61,11 @@ class ImageToPDFMergeView():
         self.mergeButton = ButtonFactory.create_button(self, "Merge", self.mergeMedia)
         
         # PDF drag and drop area
-        self.dragAndDropView = DragAndDropArea(self.imageService)
+        
+        try:
+            self.dragAndDropView = DragAndDropArea(self.imageService)
+        except InvalidExtensionError as exception:
+            print(exception)
 
         # Setup their layouts
         self.verticalLayout = QVBoxLayout()
