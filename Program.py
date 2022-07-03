@@ -28,7 +28,7 @@ class MergerApp(QMainWindow):
             - Image Service
         '''
         self.tabs = QTabWidget()
-        self.tabs.addTab(self.viewAggregtor.imageToPDFMergeView.getTab(), "Convert Image into PDF")
+        self.tabs.addTab(self.viewAggregtor.imageToPDFMergeView.getTab(), "Convert Images into PDF")
         self.tabs.addTab(self.viewAggregtor.pdfCollectionMergeView.getTab(), "Merge PDF")
         
         self.tabsLayout = QHBoxLayout()

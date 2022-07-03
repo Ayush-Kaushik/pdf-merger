@@ -54,11 +54,12 @@ class PDFCollectionMergeView():
         # Input box that shows location of merged file
         self.textbox = QLineEdit()
         self.textbox.resize((self.config.width - 200), 40)
+        self.textbox.setReadOnly(True)
         
         # Button to open dialog to select location to place merged file
         self.saveButton = ButtonFactory.create_button(self, "Save To", self.getOutputFilePath)
-        self.deleteButton = ButtonFactory.create_button(self, "Reset", self.resetView)
-        self.mergeButton = ButtonFactory.create_button(self, "Merge", self.mergeMedia)
+        self.deleteButton = ButtonFactory.create_button(self, "Reset Files", self.resetView)
+        self.mergeButton = ButtonFactory.create_button(self, "Merge Files", self.mergeMedia)
         
         # PDF drag and drop area
         self.dragAndDropView = DragAndDropArea(self.pdfService)
@@ -70,7 +71,8 @@ class PDFCollectionMergeView():
         self.horizontalBoyLayout.addWidget(self.textbox, 2)
         self.horizontalBoyLayout.addWidget(self.saveButton, 0)
         
-        self.dragAndDropAreaLayout = QHBoxLayout()
+        self.dragAndDropAreaLayout = QVBoxLayout()
+        self.dragAndDropAreaLayout.addWidget(QLabel("Drag and drop files below"))
         self.dragAndDropAreaLayout.addWidget(self.dragAndDropView)
 
         self.callToActionLayout = QHBoxLayout()
