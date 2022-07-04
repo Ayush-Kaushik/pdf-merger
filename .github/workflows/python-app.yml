@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pyinstaller PyPDF2 PyQt5
+        python -m pip install pyinstaller PyPDF2 PyQt5 img2pdf
 
     - name: Check contents of workspace
       run: |
