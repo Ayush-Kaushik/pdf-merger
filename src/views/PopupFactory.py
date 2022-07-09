@@ -1,6 +1,6 @@
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+# Author: Ayush Kaushik
+
+from PyQt5.QtWidgets import QMessageBox
 
 class PopupFactory():
     @staticmethod

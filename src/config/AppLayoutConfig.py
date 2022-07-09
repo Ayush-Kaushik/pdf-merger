@@ -1,3 +1,5 @@
+# Author: Ayush Kaushik
+
 class AppLayoutConfig:
     def __init__(self, title: str, left: int, top: int, height: int, width: int):
         self.title = title

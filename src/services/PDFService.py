@@ -1,13 +1,14 @@
+# Author: Ayush Kaushik
+
 import pathlib
 from PyPDF2 import PdfFileMerger
-
 
 class PDFService:
     '''
     Deals with operations related to PDF merging and creation
     '''
     
-    VALID_EXTENSIONS = [".pdf"]
+    VALID_EXTENSIONS = {".pdf" : ".pdf"}
 
     def __init__(self, merger: PdfFileMerger, pdfFilePathCollection, targetFilePath: pathlib.Path):
         self.merger = merger

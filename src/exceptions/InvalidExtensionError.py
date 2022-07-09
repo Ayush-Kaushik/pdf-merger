@@ -1,3 +1,5 @@
+# Author: Ayush Kaushik
+
 class InvalidExtensionError(Exception):
     """ Exception raised when extension of file to be merged is not valid
     

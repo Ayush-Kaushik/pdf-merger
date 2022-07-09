@@ -1,7 +1,5 @@
 import sys
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QHBoxLayout, QWidget, QMainWindow, QTabWidget, QApplication
 from src.views.Labels import Labels
 
 from src.views.ViewAggregator import ViewAggregator

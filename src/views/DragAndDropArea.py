@@ -1,6 +1,9 @@
+# Author: Ayush Kaushik
+
+import os
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QAbstractItemView, QListWidget
 from src.exceptions.InvalidExtensionError import InvalidExtensionError
 from src.views.PopupFactory import PopupFactory
 
@@ -45,13 +48,13 @@ class DragAndDropArea(QListWidget):
             try:
                 for url in event.mimeData().urls():
                     if url.isLocalFile():
-                        for ext in self.service.VALID_EXTENSIONS:
-                            if url.toString().endswith(ext):
-                                self.service.appendToQueue(url)
-                                self.addItem(str(url.toLocalFile()))
-                            else:
-                                raise InvalidExtensionError(
-                                    self.service.VALID_EXTENSIONS)
+                        filename, file_extension = os.path.splitext(url.toString())                     
+                        if file_extension in self.service.VALID_EXTENSIONS:
+                            self.service.appendToQueue(url)
+                            self.addItem(str(url.toLocalFile()))
+                        else:
+                            raise InvalidExtensionError(
+                                self.service.VALID_EXTENSIONS)
             except InvalidExtensionError as invalidExtensionException:
                 popup = PopupFactory.getPopup(
                     "Error", invalidExtensionException.message)

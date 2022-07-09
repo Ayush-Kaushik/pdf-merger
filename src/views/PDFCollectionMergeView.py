@@ -1,15 +1,13 @@
+# Author: Ayush Kaushik
+
 from PyPDF2 import PdfFileMerger
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QWidget, QFileDialog, QVBoxLayout, QLineEdit, QHBoxLayout, QLabel
 
 from src.config.AppLayoutConfig import AppLayoutConfig
-
 from src.services.PDFService import PDFService
 from src.views.ButtonFactory import ButtonFactory
 from src.views.DragAndDropArea import DragAndDropArea
 from src.views.Labels import Labels
-from src.exceptions.InvalidExtensionError import InvalidExtensionError
 
 class PDFCollectionMergeView():
     '''
