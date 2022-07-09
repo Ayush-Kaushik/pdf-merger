@@ -1,7 +1,7 @@
 <h2 align="center">PDF Merger Desktop Application 🖨️ </h2> 
 
 <p align="center"> 
-Merge PDF on your laptop with ease in a safe and secure manner with PDF merger. No need to use online tools that store your personal PDF data.
+Merge PDF's on your laptop with ease in a safe and secure manner with *PDF merger*. No need to use online tools that could potentially store your personal data.
 </p>
   
 ## 📝 Table of Contents  
@@ -12,14 +12,11 @@ Merge PDF on your laptop with ease in a safe and secure manner with PDF merger. 
 - [Acknowledgments](#acknowledgement)  
 - [License](#license)  
   
-## 🏁 About <a name = "#getting_started"></a>  
-I receive some documents via Mail that I scan and store in a safe space. Some documents include
-more than one page which creates a collection of single PDF file when scanned. Hence, I wanted to build
-a quick and easy tool that merges all these pdf files into single file.
+## 🏁 About <a name = "#getting_started"></a>
+I had the idea to create this tool while working with large volume of PDF's with secure information. When exchanging
+these documents via Email I needed a tool to combine multiple PDF's into single one. 
 
-There are many options available online to merge PDF files but I do not trust any online "Free" source where
-I have to upload my sensitive PDF documents to another site just to merge them. Hence, the idea formed to build my own PDF Merger desktop application.
-
+There are online "Free" options available but I didn't want to upload PDF's to as it could pose a security threat. Hence, I created this desktop application that merges all these pdf files into single file.
 
 ## 🚀 Deployment <a name = "deployment"></a>  
 - Get one of the latest release zip file

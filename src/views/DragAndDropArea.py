@@ -1,8 +1,7 @@
 # Author: Ayush Kaushik
 
 import os
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAbstractItemView, QListWidget
 from src.exceptions.InvalidExtensionError import InvalidExtensionError
 from src.views.PopupFactory import PopupFactory
