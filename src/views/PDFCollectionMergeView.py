@@ -8,6 +8,7 @@ from src.services.PDFService import PDFService
 from src.views.ButtonFactory import ButtonFactory
 from src.views.DragAndDropArea import DragAndDropArea
 from src.views.Labels import Labels
+from src.views.PopupFactory import PopupFactory
 
 class PDFCollectionMergeView():
     '''
@@ -41,6 +42,9 @@ class PDFCollectionMergeView():
     def mergeMedia(self):
         try:
             self.pdfService.mergeQueue()
+            popup = PopupFactory.getPopup(
+                    "Info", "Task Successful!")
+            popup.exec_()
         except Exception as exception:
             print(exception)
         finally:

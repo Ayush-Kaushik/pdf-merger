@@ -8,6 +8,7 @@ from src.views.ButtonFactory import ButtonFactory
 from src.config.AppLayoutConfig import AppLayoutConfig
 from src.views.DragAndDropArea import DragAndDropArea
 from src.views.Labels import Labels
+from src.views.PopupFactory import PopupFactory
 
 class ImageToPDFMergeView():
     '''
@@ -41,6 +42,9 @@ class ImageToPDFMergeView():
     def mergeMedia(self):
         try:
             self.imageService.mergeQueue()
+            popup = PopupFactory.getPopup(
+                    "Info", "Task Successful!")
+            popup.exec_()
         except Exception as exception:
             print(exception)
         finally:
