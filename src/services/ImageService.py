@@ -12,7 +12,8 @@ class ImageService:
     # Dictionary of valid extensions
     VALID_EXTENSIONS = {
         ".jpg": ".jpg", 
-        ".jpeg": ".jpeg"
+        ".jpeg": ".jpeg",
+        ".png": ".png"
     }
 
     def __init__(self, merger: img2pdf, imgFilePathCollection, targetFilePath: pathlib.Path):
