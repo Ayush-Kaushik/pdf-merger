@@ -2,7 +2,7 @@ import unittest
 import pathlib
 import img2pdf
 from PyQt5.QtCore import QUrl
-from pdf_merger.src.services.image_service import ImageService
+from src.services import ImageService
 
 class TestImageToPDFService(unittest.TestCase):
     def setUp(self):
@@ -16,7 +16,7 @@ class TestImageToPDFService(unittest.TestCase):
         self.assertTrue(self.targetFilePath.exists())
 
     def test_setTargetFilePath(self):
-        new_target_path = pathlib.Path("/pdf_merger/tests/output/image.jpg")
+        new_target_path = pathlib.Path("./pdf_merger/tests/output/image.jpg")
         self.imageService.setTargetFilePath(new_target_path)
         self.assertEqual(self.imageService.getTargetFilePath(), new_target_path)
 

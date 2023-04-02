@@ -1,7 +1,7 @@
 # Author: Ayush Kaushik
 
-from views.ImageToPDFMergeView import ImageToPDFMergeView
-from views.PDFCollectionMergeView import PDFCollectionMergeView
+from .image_to_pdf_merge_view import ImageToPDFMergeView
+from .pdf_collection_merge_view import PDFCollectionMergeView
 
 class ViewAggregator():
     '''

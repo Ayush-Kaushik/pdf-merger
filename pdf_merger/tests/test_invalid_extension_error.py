@@ -1,5 +1,5 @@
 import unittest
-from pdf_merger.src.exceptions.invalid_extension_error import InvalidExtensionError
+from src.exceptions.invalid_extension_error import InvalidExtensionError
 
 class TestInvalidExtensionError(unittest.TestCase):
 

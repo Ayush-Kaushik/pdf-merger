@@ -41,6 +41,7 @@ class ImageService:
     def appendToQueue(self, item):
         if type(item) is QUrl:
             modifiedItemPath = self.remove_prefix(item.toString(), "file://")
+            print(modifiedItemPath)
             self.filePathList.append(modifiedItemPath)
                                              
     def clearQueue(self):

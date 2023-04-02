@@ -126,3 +126,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Test output
+/pdf_merger/tests/output/test_output.pdf
+report.html

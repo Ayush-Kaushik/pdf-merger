@@ -3,8 +3,8 @@
 import os
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAbstractItemView, QListWidget
-from exceptions.InvalidExtensionError import InvalidExtensionError
-from views.PopupFactory import PopupFactory
+from ..exceptions import InvalidExtensionError
+from .popup_factory import PopupFactory
 
 class DragAndDropArea(QListWidget):
 

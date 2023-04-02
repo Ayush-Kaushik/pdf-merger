@@ -1,24 +1,24 @@
 # Author: Ayush Kaushik
 
+from PyPDF2 import PdfFileMerger
 from PyQt5.QtWidgets import QWidget, QFileDialog, QVBoxLayout, QLineEdit, QHBoxLayout, QLabel
-import img2pdf
 
-from services.ImageService import ImageService
-from views.ButtonFactory import ButtonFactory
-from config.AppLayoutConfig import AppLayoutConfig
-from views.DragAndDropArea import DragAndDropArea
-from views.Labels import Labels
-from views.PopupFactory import PopupFactory
+from .app_layout_config import AppLayoutConfig
+from ..services import PDFService
+from .button_factory import ButtonFactory
+from .drag_drop_area import DragAndDropArea
+from .labels import Labels
+from .popup_factory import PopupFactory
 
-class ImageToPDFMergeView():
+class PDFCollectionMergeView():
     '''
-        Includes the complete view for Merging Images into PDF
+        Includes the complete view for Merging PDF into single PDF
     '''
     
     def __init__(self):
         self.tab = QWidget()
-        self.imageService = ImageService(img2pdf, [], "")
-        self.config = AppLayoutConfig("Image Merger", 10, 10, 500, 400)
+        self.pdfService = PDFService(PdfFileMerger(), [], "")
+        self.config = AppLayoutConfig("PDF Merger", 10, 10, 500, 400)
         self.labels = Labels()
         self.initializeLayout()
     
@@ -28,20 +28,20 @@ class ImageToPDFMergeView():
         savedLocation = ""
         if directory != "":
             savedLocation = directory + "/merged.pdf"        
-            self.imageService.setTargetFilePath(savedLocation)
+            self.pdfService.setTargetFilePath(savedLocation)
         self.textbox.setText(savedLocation)
-
+        
     def resetView(self):
-        self.imageService.setTargetFilePath("")
-        self.textbox.setText(self.imageService.targetFilePath)
-        self.imageService.clearQueue()
+        self.pdfService.setTargetFilePath("")
+        self.textbox.setText(self.pdfService.targetFilePath)
+        self.pdfService.clearQueue()
         self.dragAndDropView.clearQueue()
         
     # return location of merged pdf if successful
     # otherwise return null
     def mergeMedia(self):
         try:
-            self.imageService.mergeQueue()
+            self.pdfService.mergeQueue()
             popup = PopupFactory.getPopup(
                     "Info", "Task Successful!")
             popup.exec_()
@@ -64,7 +64,7 @@ class ImageToPDFMergeView():
         self.mergeButton = ButtonFactory.create_button(self, "Merge Files", self.mergeMedia)
         
         # PDF drag and drop area
-        self.dragAndDropView = DragAndDropArea(self.imageService)
+        self.dragAndDropView = DragAndDropArea(self.pdfService)
 
         # Setup their layouts
         self.verticalLayout = QVBoxLayout()
@@ -84,8 +84,10 @@ class ImageToPDFMergeView():
         self.verticalLayout.addLayout(self.horizontalBoyLayout)
         self.verticalLayout.addLayout(self.dragAndDropAreaLayout)
         self.verticalLayout.addLayout(self.callToActionLayout)
+        
         self.tab.setLayout(self.verticalLayout)
-    
         
     def getTab(self):
         return self.tab
+    
+    
