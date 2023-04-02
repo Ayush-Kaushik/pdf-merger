@@ -1,0 +1,6 @@
+# Package requirements
+pathlib==3.9.13
+PYPDF2==1.26.0
+PyQt5.QtCore==5.15.7
+
+# Development requirements

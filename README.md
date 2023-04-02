@@ -13,23 +13,20 @@ Merge `PDF`, `JPEG` and `PNG` files on your laptop with ease in a safe and secur
 - [License](#license)  
   
 ## 🏁 About <a name = "#getting_started"></a>
-I had the idea to create this tool while working with large volume of PDF's containing `sensitive information`. 
+I created this tool to simplify the process of merging multiple files into a single large file while working with a large volume of PDF's containing sensitive information.
 
-Attaching multiple documents to an email is tedious and there are chances that a user could forget a file.
+Attaching multiple documents to an email can be tedious, and there is a chance that a user could forget a file. Online free options are available, but they pose a security threat as it requires uploading PDF's.
 
-There are online "Free" options available but I didn't want to upload PDF's to as it could pose a security threat. 
-
-I created this desktop application that merges all the `PDF's` files into single large file.
+This desktop application merges all the PDF, JPG\JPEG, and PNG files into a single large file.
 
 The tool currently supports following formats:
-
 - `PDF`
 - `JPG\JPEG`
 - `PNG`
 
 
 ## 🚀 Deployment <a name = "deployment"></a>  
-- Download latest release zip file
+- Download the latest release zip file
 - Unzip the file and you'll find Program.exe file inside
 - Double click the executable and it should start the program
   
@@ -42,17 +39,28 @@ The tool currently supports following formats:
 
 ### When incorrect file extension is drag-dropped
 ![Invalid Extension Error](./readme/Invalid_Extension_Error.gif)
-  
-## ⛏️ Built Using <a name = "built_using"></a>  
+
+## ⛏️ Built Using <a name = "built_using"></a>
 - Python3
 - PyPDF2
 - PyQt5
   
 ## 👏 Acknowledgements <a name = "acknowledgement"></a>    
 - The free landing page has been acquired from here https://cruip.com/demos/solid/. All credit goes to their respective owners.
+- Free PDF's for testing found here: https://freetestdata.com/document-files/pdf/
+- Sample image files found here: https://file-examples.com/
   
 ## 📝 License <a name = "acknowledgement"></a>  
 - MIT
 
+## TO DO
+
+### Milestone 1
+
+- [ ] Fix all the test cases
+- [ ] Fix the documentation - add developer documentation and user documentation
+- [ ] Update the website for the merger
+- [ ] Find out how to increase version number via actions
+- [ ] Find out how too create a download link for this service
 
 
