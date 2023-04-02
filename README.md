@@ -1,9 +1,13 @@
-<h2 align="center">File Merger Desktop Application 🖨️ </h2> 
-
+<h2 align="center">File Merger Desktop Application 🖨️ </h2>
 
 Merge `PDF`, `JPEG` and `PNG` files on your laptop with ease in a safe and secure manner with `File Merger`. No need to use online tools that could potentially store your personal data.
 
-  
+## 👷 Build Status
+| Branch | Status |
+| --------------- | --------------- |
+| Main | [![PDF Merger](https://github.com/Ayush-Kaushik/pdf-merger/actions/workflows/main.yml/badge.svg)](https://github.com/Ayush-Kaushik/pdf-merger/actions/workflows/main.yml)| 
+| Release | [![PDF Merger](https://github.com/Ayush-Kaushik/pdf-merger/actions/workflows/release.yml/badge.svg)](https://github.com/Ayush-Kaushik/pdf-merger/actions/workflows/release.yml) |
+
 ## 📝 Table of Contents  
 - [About](#about)  
 - [Deployment](#deployment) 
@@ -32,13 +36,13 @@ The tool currently supports following formats:
   
 ## 🎈 Usage <a name="usage"></a>  
 ### Merging PDF Files
-![Merging PDF Files](./readme/PDF_Merging.gif)
+![Merging PDF Files](./.readme/PDF_Merging.gif)
 
 ### Merging Images
-![Merging Images (JPG) Files](./readme/Image_Merging.gif)
+![Merging Images (JPG) Files](./.readme/Image_Merging.gif)
 
 ### When incorrect file extension is drag-dropped
-![Invalid Extension Error](./readme/Invalid_Extension_Error.gif)
+![Invalid Extension Error](./.readme/Invalid_Extension_Error.gif)
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 - Python3
