@@ -1,8 +1,10 @@
 # Package requirements
-pathlib==3.9.13
-PYPDF2==1.26.0
-PyQt5.QtCore==5.15.7
+pathlib==1.0.1
+PyQt5==5.15.10
+PYPDF2==1.28.6
+img2pdf==0.5.1
 
 # Development requirements
 pytest==7.2.2
 pytest-html==3.2.0
+

@@ -1,10 +1,12 @@
 import unittest
-from src.views import AppLayoutConfig
+from pdf_merger.src.views import AppLayoutConfig
+from pdf_merger.src.views.labels import Labels
+
 
 class TestAppLayoutConfig(unittest.TestCase):
     def test_constructor_defaults(self):
         config = AppLayoutConfig()
-        self.assertEqual(config.title, "Your default app name")
+        self.assertEqual(config.title, Labels.APP_NAME)
         self.assertEqual(config.left, 10)
         self.assertEqual(config.top, 10)
         self.assertEqual(config.width, 800)
@@ -22,6 +24,7 @@ class TestAppLayoutConfig(unittest.TestCase):
         self.assertEqual(config.top, top)
         self.assertEqual(config.width, width)
         self.assertEqual(config.height, height)
+
 
 if __name__ == '__main__':
     unittest.main()

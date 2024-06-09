@@ -3,17 +3,18 @@
 import os
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAbstractItemView, QListWidget
-from ..exceptions import InvalidExtensionError
-from .popup_factory import PopupFactory
+from pdf_merger.src.exceptions import InvalidExtensionError
+from pdf_merger.src.views.popup_factory import PopupFactory
 
-class DragAndDropArea(QListWidget):
-
-    '''
+'''
     List Widget Box which accepts multiple PDF files
+    
     Using polymorphism here to be able to pass any services
     PDFService, ImageService etc.
-    '''
+'''
 
+
+class DragAndDropArea(QListWidget):
     def __init__(self, mediaService, parent=None):
         super().__init__(parent)
 
@@ -47,7 +48,7 @@ class DragAndDropArea(QListWidget):
             try:
                 for url in event.mimeData().urls():
                     if url.isLocalFile():
-                        filename, file_extension = os.path.splitext(url.toString())                     
+                        filename, file_extension = os.path.splitext(url.toString())
                         if file_extension in self.service.VALID_EXTENSIONS:
                             self.service.appendToQueue(url)
                             self.addItem(str(url.toLocalFile()))
