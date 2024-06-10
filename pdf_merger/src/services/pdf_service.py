@@ -10,12 +10,10 @@ from pdf_merger.src.services.merger_service_interface import FileMergerServiceIn
 
 
 class PDFService(FileMergerServiceInterface):
-    VALID_EXTENSIONS = {".pdf" : ".pdf"}
-
     def __init__(self, merger: PdfFileMerger, path_list, target_path: pathlib.Path):
+        super().__init__({".pdf": ".pdf"}, target_path)  # passing valid extensions
         self.merger = merger
         self.path_list = path_list
-        self.target_file_path = target_path
 
     def merge_files(self):
         for file in self.path_list:

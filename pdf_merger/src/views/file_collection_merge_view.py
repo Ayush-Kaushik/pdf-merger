@@ -1,57 +1,59 @@
 # Author: Ayush Kaushik
 
-from PyPDF2 import PdfFileMerger
 from PyQt5.QtWidgets import QWidget, QFileDialog, QVBoxLayout, QLineEdit, QHBoxLayout, QLabel
 
 from pdf_merger.src.views.app_layout_config import AppLayoutConfig
-from pdf_merger.src.services import PDFService
 from pdf_merger.src.views.button_factory import ButtonFactory
 from pdf_merger.src.views.drag_drop_area import DragAndDropArea
 from pdf_merger.src.views.labels import Labels
 from pdf_merger.src.views.popup_factory import PopupFactory
 
+from pdf_merger.src.services.merger_service_interface import FileMergerServiceInterface
+
 '''
-    Includes the complete view for Merging PDF into single PDF
+    Includes the complete view for Merging files into single PDF
 '''
 
 
-class PDFCollectionMergeView:
-    def __init__(self):
-        self.tab = QWidget()
-        self.pdfService = PDFService(PdfFileMerger(), [], "")
-        self.config = AppLayoutConfig("PDF Merger", 10, 10, 500, 400)
-        self.labels = Labels()
-        self.initializeLayout()
+class FileCollectionMergeView(QWidget):
+    def __init__(
+            self,
+            service: FileMergerServiceInterface,
+            config: AppLayoutConfig,
+            labels: Labels
+    ):
+        super().__init__()
+        self.fileMergerService = service
+        self.config = config
+        self.labels = labels
+        self.initialize_layout()
     
-    def getOutputFilePath(self):
-        directory = QFileDialog.getExistingDirectory(
-            None, self.labels.CHOOSE_DIRECTORY, "")
+    def get_output_file_path(self):
+        directory = QFileDialog.getExistingDirectory(None, self.labels.CHOOSE_DIRECTORY, "")
         saved_file_path = ""
         if directory != "":
             saved_file_path = directory + "/merged.pdf"
-            self.pdfService.set_output_target(saved_file_path)
+            self.fileMergerService.set_output_target(saved_file_path)
         self.textbox.setText(saved_file_path)
         
-    def resetView(self):
-        self.pdfService.set_output_target("")
-        self.textbox.setText(self.pdfService.target_file_path)
-        self.pdfService.clear_list()
-        self.dragAndDropView.clearQueue()
-        
-    # return location of merged pdf if successful
-    # otherwise return null
-    def mergeMedia(self):
+    def reset_widget(self):
+        self.fileMergerService.set_output_target("")
+        self.textbox.setText(self.fileMergerService.target_file_path)
+        self.fileMergerService.clear_list()
+        self.dragAndDropView.clear_area()
+
+    def merge_files(self):
         try:
-            self.pdfService.merge_files()
-            popup = PopupFactory.getPopup("Info", "Task Successful!")
+            self.service.merge_files()
+            popup = PopupFactory.get("Info", "Task Successful!")
             popup.exec_()
         except Exception as exception:
             print(exception)
         finally:
-            self.resetView()
+            self.reset_widget()
         
-    def initializeLayout(self):
-        self.tab.layout = QVBoxLayout()
+    def initialize_layout(self):
+        self.layout = QVBoxLayout()
         
         # Input box that shows location of merged file
         self.textbox = QLineEdit()
@@ -59,12 +61,12 @@ class PDFCollectionMergeView:
         self.textbox.setReadOnly(True)
         
         # Button to open dialog to select location to place merged file
-        self.saveButton = ButtonFactory.create(self, "Save To", self.getOutputFilePath)
-        self.deleteButton = ButtonFactory.create(self, "Reset Files", self.resetView)
-        self.mergeButton = ButtonFactory.create(self, "Merge Files", self.mergeMedia)
+        self.saveButton = ButtonFactory.create("Save To", self.get_output_file_path)
+        self.deleteButton = ButtonFactory.create("Reset Files", self.reset_widget)
+        self.mergeButton = ButtonFactory.create("Merge Files", self.merge_files)
         
         # PDF drag and drop area
-        self.dragAndDropView = DragAndDropArea(self.pdfService)
+        self.dragAndDropView = DragAndDropArea(self.fileMergerService)
 
         # Setup their layouts
         self.verticalLayout = QVBoxLayout()
@@ -85,9 +87,9 @@ class PDFCollectionMergeView:
         self.verticalLayout.addLayout(self.dragAndDropAreaLayout)
         self.verticalLayout.addLayout(self.callToActionLayout)
         
-        self.tab.setLayout(self.verticalLayout)
+        self.setLayout(self.verticalLayout)
         
-    def getTab(self):
-        return self.tab
+    def get_widget(self):
+        return self
     
     

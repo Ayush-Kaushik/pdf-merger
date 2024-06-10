@@ -1,5 +1,10 @@
 import sys
+
+import img2pdf
+from PyPDF2 import PdfFileMerger
 from PyQt5.QtWidgets import QHBoxLayout, QWidget, QMainWindow, QTabWidget, QApplication
+
+from pdf_merger.src.services import ImageService, PDFService
 from pdf_merger.src.views import AppLayoutConfig, ViewAggregator
 from pdf_merger.src.views.labels import Labels
 
@@ -23,8 +28,8 @@ class MergerApp(QMainWindow):
             - Image Service
         '''
         self.tabs = QTabWidget()
-        self.tabs.addTab(self.viewAggregator.imageToPDFMergeView.getTab(), Labels.IMAGE_TO_PDF_TAB_TITLE)
-        self.tabs.addTab(self.viewAggregator.pdfCollectionMergeView.getTab(), Labels.MERGE_PDF_TAB_TITLE)
+        self.tabs.addTab(self.viewAggregator.imageToPDFMergeView.get_widget(), Labels.IMAGE_TO_PDF_TAB_TITLE)
+        self.tabs.addTab(self.viewAggregator.pdfCollectionMergeView.get_widget(), Labels.MERGE_PDF_TAB_TITLE)
 
         self.tabsLayout = QHBoxLayout()
         self.tabsLayout.addWidget(self.tabs)
@@ -35,7 +40,16 @@ class MergerApp(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 
-    viewAggregator = ViewAggregator()
+    # setting up dependencies to be injected
+    viewAggregator = ViewAggregator(
+        PDFService(PdfFileMerger(), [], ""),
+        ImageService(img2pdf, [], ""),
+        AppLayoutConfig("Image Merger", 10, 10, 500, 400),
+        AppLayoutConfig("PDF Merger", 10, 10, 500, 400),
+
+        Labels()
+    )
+
     appConfig = AppLayoutConfig("PDF Merger", 10, 10, 500, 400)
 
     ex = MergerApp(viewAggregator, appConfig)

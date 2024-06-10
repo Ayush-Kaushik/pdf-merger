@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAbstractItemView, QListWidget
 from pdf_merger.src.exceptions import InvalidExtensionError
 from pdf_merger.src.views.popup_factory import PopupFactory
+from pdf_merger.src.services.merger_service_interface import FileMergerServiceInterface
 
 '''
     List Widget Box which accepts multiple PDF files
@@ -15,16 +16,16 @@ from pdf_merger.src.views.popup_factory import PopupFactory
 
 
 class DragAndDropArea(QListWidget):
-    def __init__(self, mediaService, parent=None):
+    def __init__(self, service: FileMergerServiceInterface, parent=None):
         super().__init__(parent)
 
         self.setAcceptDrops(True)
         self.resize(600, 600)
-        self.service = mediaService
+        self.service = service
         self.setDragDropMode(QAbstractItemView.InternalMove)
         self.setSelectionMode(QAbstractItemView.ExtendedSelection)
 
-    def clearQueue(self):
+    def clear_area(self):
         self.clear()
 
     def dragEnterEvent(self, event):
@@ -49,15 +50,14 @@ class DragAndDropArea(QListWidget):
                 for url in event.mimeData().urls():
                     if url.isLocalFile():
                         filename, file_extension = os.path.splitext(url.toString())
-                        if file_extension in self.service.VALID_EXTENSIONS:
-                            self.service.appendToQueue(url)
+                        if file_extension in self.service.allowed_file_extensions:
+                            self.service.append_file(url)
                             self.addItem(str(url.toLocalFile()))
                         else:
                             raise InvalidExtensionError(
-                                self.service.VALID_EXTENSIONS)
+                                self.service.allowed_file_extensions)
             except InvalidExtensionError as invalidExtensionException:
-                popup = PopupFactory.getPopup(
-                    "Error", invalidExtensionException.message)
+                popup = PopupFactory.get("Error", invalidExtensionException.message)
                 popup.exec_()
         else:
             return super().dropEvent(event)
