@@ -1,5 +1,7 @@
 import sys
 
+import injector
+from injector import Injector, inject, Module, Binder
 import img2pdf
 from PyPDF2 import PdfFileMerger
 from PyQt5.QtWidgets import QHBoxLayout, QWidget, QMainWindow, QTabWidget, QApplication
@@ -9,9 +11,27 @@ from pdf_merger.src.views import AppLayoutConfig, ViewAggregator
 from pdf_merger.src.views.labels import Labels
 
 
+class AppConfigModule(Module):
+    def configure(self, binder: Binder) -> None:
+        binder.bind(AppLayoutConfig, to=AppLayoutConfig("PDF Merger", 10, 10, 500, 400), scope=injector.singleton)
+
+
+class ViewAggregatorContainerModule(Module):
+    def configure(self, binder: Binder) -> None:
+        binder.bind(PDFService, to=PDFService(PdfFileMerger(), [], ""), scope=injector.singleton)
+        binder.bind(ImageService, to=ImageService(img2pdf, [], ""), scope=injector.singleton)
+        binder.bind(Labels, to=Labels())
+        binder.bind(ViewAggregator, to=ViewAggregator, scope=injector.singleton)
+
+
 class MergerApp(QMainWindow):
+    @inject
     def __init__(self, aggregator: ViewAggregator, config: AppLayoutConfig):
         super().__init__()
+        self.widget = None
+        self.tabs = None
+        self.tabsLayout = None
+        
         self.config = config
         self.viewAggregator = aggregator
         self.initialize()
@@ -22,11 +42,6 @@ class MergerApp(QMainWindow):
         self.setWindowTitle(self.config.title)
         self.setGeometry(self.config.left, self.config.top, self.config.width, self.config.height)
 
-        '''
-        Append tabs for each service
-            - PDF Service
-            - Image Service
-        '''
         self.tabs = QTabWidget()
         self.tabs.addTab(self.viewAggregator.imageToPDFMergeView.get_widget(), Labels.IMAGE_TO_PDF_TAB_TITLE)
         self.tabs.addTab(self.viewAggregator.pdfCollectionMergeView.get_widget(), Labels.MERGE_PDF_TAB_TITLE)
@@ -39,18 +54,6 @@ class MergerApp(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-
-    # setting up dependencies to be injected
-    viewAggregator = ViewAggregator(
-        PDFService(PdfFileMerger(), [], ""),
-        ImageService(img2pdf, [], ""),
-        AppLayoutConfig("Image Merger", 10, 10, 500, 400),
-        AppLayoutConfig("PDF Merger", 10, 10, 500, 400),
-
-        Labels()
-    )
-
-    appConfig = AppLayoutConfig("PDF Merger", 10, 10, 500, 400)
-
-    ex = MergerApp(viewAggregator, appConfig)
+    injector_instance = Injector([AppConfigModule, ViewAggregatorContainerModule])
+    ex = injector_instance.get(MergerApp)
     sys.exit(app.exec_())
