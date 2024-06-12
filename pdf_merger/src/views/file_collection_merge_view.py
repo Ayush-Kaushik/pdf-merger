@@ -44,7 +44,7 @@ class FileCollectionMergeView(QWidget):
 
     def merge_files(self):
         try:
-            self.service.merge_files()
+            self.fileMergerService.merge_files()
             popup = PopupFactory.get("Info", "Task Successful!")
             popup.exec_()
         except Exception as exception:
@@ -91,5 +91,3 @@ class FileCollectionMergeView(QWidget):
         
     def get_widget(self):
         return self
-    
-    

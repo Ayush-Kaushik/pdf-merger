@@ -1,3 +1,5 @@
+# Author: Ayush Kaushik
+
 class UILayoutConstants:
     WINDOW_WIDTH = 800
     WINDOW_HEIGHT = 600

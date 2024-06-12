@@ -62,9 +62,8 @@ The tool currently supports following formats:
 ### Milestone 1
 
 - [ ] Fix all the test cases
-- [ ] Fix the documentation - add developer documentation and user documentation
 - [ ] Update the website for the merger
 - [ ] Find out how to increase version number via actions
-- [ ] Find out how too create a download link for this service
+- [ ] Find out how to create a download link for this service
 
 
