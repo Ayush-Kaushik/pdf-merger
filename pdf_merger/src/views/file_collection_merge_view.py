@@ -8,7 +8,7 @@ from pdf_merger.src.views.drag_drop_area import DragAndDropArea
 from pdf_merger.src.views.labels import Labels
 from pdf_merger.src.views.popup_factory import PopupFactory
 
-from pdf_merger.src.services.merger_service_interface import FileMergerServiceInterface
+from pdf_merger.src.services.abstract_merger_service import AbstractFileMergerService
 
 '''
     Includes the complete view for Merging files into single PDF
@@ -18,7 +18,7 @@ from pdf_merger.src.services.merger_service_interface import FileMergerServiceIn
 class FileCollectionMergeView(QWidget):
     def __init__(
             self,
-            service: FileMergerServiceInterface,
+            service: AbstractFileMergerService,
             config: AppLayoutConfig,
             labels: Labels
     ):

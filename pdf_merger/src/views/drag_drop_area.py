@@ -5,10 +5,10 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAbstractItemView, QListWidget
 from pdf_merger.src.exceptions import InvalidExtensionError
 from pdf_merger.src.views.popup_factory import PopupFactory
-from pdf_merger.src.services.merger_service_interface import FileMergerServiceInterface
+from pdf_merger.src.services.abstract_merger_service import AbstractFileMergerService
 
 '''
-    List Widget Box which accepts multiple PDF files
+    List Widget Box which accepts multiple files
     
     Using polymorphism here to be able to pass any services
     PDFService, ImageService etc.
@@ -16,7 +16,7 @@ from pdf_merger.src.services.merger_service_interface import FileMergerServiceIn
 
 
 class DragAndDropArea(QListWidget):
-    def __init__(self, service: FileMergerServiceInterface, parent=None):
+    def __init__(self, service: AbstractFileMergerService, parent=None):
         super().__init__(parent)
 
         self.setAcceptDrops(True)

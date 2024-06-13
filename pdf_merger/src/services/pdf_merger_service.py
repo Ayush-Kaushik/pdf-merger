@@ -2,14 +2,14 @@
 
 import pathlib
 from PyPDF2 import PdfFileMerger
-from pdf_merger.src.services.merger_service_interface import FileMergerServiceInterface
+from pdf_merger.src.services.abstract_merger_service import AbstractFileMergerService
 
 '''
     Deals with operations related to PDF merging and creation
 '''
 
 
-class PDFService(FileMergerServiceInterface):
+class PdfMergerService(AbstractFileMergerService):
     def __init__(self, merger: PdfFileMerger, path_list, target_path: pathlib.Path):
         super().__init__({".pdf": ".pdf"}, target_path)  # passing valid extensions
         self.merger = merger

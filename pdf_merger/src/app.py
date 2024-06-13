@@ -8,7 +8,7 @@ import img2pdf
 from PyPDF2 import PdfFileMerger
 from PyQt5.QtWidgets import QHBoxLayout, QWidget, QMainWindow, QTabWidget, QApplication
 
-from pdf_merger.src.services import ImageService, PDFService
+from pdf_merger.src.services import ImageMergerService, PdfMergerService
 from pdf_merger.src.views import AppLayoutConfig, ViewAggregator
 from pdf_merger.src.views.labels import Labels
 
@@ -20,8 +20,8 @@ class AppConfigModule(Module):
 
 class ViewAggregatorContainerModule(Module):
     def configure(self, binder: Binder) -> None:
-        binder.bind(PDFService, to=PDFService(PdfFileMerger(), [], ""), scope=injector.singleton)
-        binder.bind(ImageService, to=ImageService(img2pdf, [], ""), scope=injector.singleton)
+        binder.bind(PdfMergerService, to=PdfMergerService(PdfFileMerger(), [], ""), scope=injector.singleton)
+        binder.bind(ImageMergerService, to=ImageMergerService(img2pdf, [], ""), scope=injector.singleton)
         binder.bind(Labels, to=Labels())
         binder.bind(ViewAggregator, to=ViewAggregator, scope=injector.singleton)
 

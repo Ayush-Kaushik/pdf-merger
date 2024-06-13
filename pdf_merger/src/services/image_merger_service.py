@@ -3,14 +3,14 @@
 from PyQt5.QtCore import QUrl
 import pathlib
 import img2pdf
-from pdf_merger.src.services.merger_service_interface import FileMergerServiceInterface
+from pdf_merger.src.services.abstract_merger_service import AbstractFileMergerService
 
 '''
     Operations related to merging Images to PDF
 '''
 
 
-class ImageService(FileMergerServiceInterface):
+class ImageMergerService(AbstractFileMergerService):
     def __init__(self, merger: img2pdf, file_list, target_path: pathlib.Path):
         super().__init__({
             ".jpg": ".jpg",

@@ -49,8 +49,7 @@ The tool currently supports following formats:
 - PyPDF2
 - PyQt5
   
-## 👏 Acknowledgements <a name = "acknowledgement"></a>    
-- The free landing page has been acquired from here https://cruip.com/demos/solid/. All credit goes to their respective owners.
+## 👏 Acknowledgements <a name = "acknowledgement"></a>
 - Free PDF's for testing found here: https://freetestdata.com/document-files/pdf/
 - Sample image files found here: https://file-examples.com/
   

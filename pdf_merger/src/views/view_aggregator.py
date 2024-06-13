@@ -2,8 +2,8 @@
 
 from pdf_merger.src.views import AppLayoutConfig, Labels
 from pdf_merger.src.views.file_collection_merge_view import FileCollectionMergeView
-from pdf_merger.src.services.image_service import ImageService
-from pdf_merger.src.services.pdf_service import PDFService
+from pdf_merger.src.services.image_merger_service import ImageMergerService
+from pdf_merger.src.services.pdf_merger_service import PdfMergerService
 from injector import inject
 
 '''
@@ -15,8 +15,8 @@ class ViewAggregator:
     @inject
     def __init__(
             self,
-            pdf_service: PDFService,
-            image_service: ImageService,
+            pdf_service: PdfMergerService,
+            image_service: ImageMergerService,
             widget_layout_config: AppLayoutConfig,
             labels: Labels
     ):

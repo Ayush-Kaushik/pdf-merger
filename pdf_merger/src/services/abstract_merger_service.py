@@ -5,7 +5,7 @@ from abc import abstractmethod, ABC
 import pathlib
 
 
-class FileMergerServiceInterface(ABC):
+class AbstractFileMergerService(ABC):
     def __init__(self, allowed_extensions, target_file_path: pathlib.Path):
         self.allowed_file_extensions = allowed_extensions
         self.target_file_path = target_file_path
@@ -29,4 +29,3 @@ class FileMergerServiceInterface(ABC):
     @abstractmethod
     def get_output_target(self):
         pass
-

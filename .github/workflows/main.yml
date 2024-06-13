@@ -1,4 +1,4 @@
-name: PDF Merger
+name: PDF Merger [main]
 
 on:
   push:

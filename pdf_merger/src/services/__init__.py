@@ -1,8 +1,8 @@
 # __init__.py
 
-from .image_service import ImageService
-from .pdf_service import PDFService
+from .image_merger_service import ImageMergerService
+from .pdf_merger_service import PdfMergerService
 
-__all__ = ['ImageService', 'PDFService']
+__all__ = ['ImageMergerService', 'PdfMergerService']
 
 VERSION = '1.0.0'
