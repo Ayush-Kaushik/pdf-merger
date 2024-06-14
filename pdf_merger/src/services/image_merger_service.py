@@ -3,7 +3,7 @@
 from PyQt5.QtCore import QUrl
 import pathlib
 import img2pdf
-from pdf_merger.src.services.abstract_merger_service import AbstractFileMergerService
+from pdf_merger.src.services.abstract_file_merger_service import AbstractFileMergerService
 
 '''
     Operations related to merging Images to PDF

@@ -130,3 +130,11 @@ dmypy.json
 # Test output
 /tests/output/test_output.pdf
 report.html
+
+# PyCharm files
+.idea/*
+
+# Extra files
+.DS_Store
+tests/.DS_Store
+tests/data/.DS_Store

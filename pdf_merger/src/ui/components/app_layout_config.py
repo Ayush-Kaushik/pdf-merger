@@ -1,12 +1,11 @@
 # Author: Ayush Kaushik
 
-from pdf_merger.src.views.labels import Labels
-from pdf_merger.src.views.ui_layout_constants import UILayoutConstants
+from pdf_merger.src.ui.constants import LabelsConstants, UILayoutConstants
 
 
 class AppLayoutConfig:
     def __init__(self,
-                 title: str = Labels.APP_NAME,
+                 title: str = LabelsConstants.APP_NAME,
                  left: int = UILayoutConstants.MARGIN,
                  top: int = UILayoutConstants.MARGIN,
                  height: int = UILayoutConstants.WINDOW_HEIGHT,

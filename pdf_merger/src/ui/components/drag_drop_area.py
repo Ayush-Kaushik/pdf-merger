@@ -4,8 +4,8 @@ import os
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAbstractItemView, QListWidget
 from pdf_merger.src.exceptions import InvalidExtensionError
-from pdf_merger.src.views.popup_factory import PopupFactory
-from pdf_merger.src.services.abstract_merger_service import AbstractFileMergerService
+from pdf_merger.src.ui.components.popup_factory import PopupFactory
+from pdf_merger.src.services.abstract_file_merger_service import AbstractFileMergerService
 
 '''
     List Widget Box which accepts multiple files

@@ -1,6 +1,14 @@
 # Author: Ayush Kaushik
 
-class Labels:
+class UILayoutConstants:
+    WINDOW_WIDTH = 800
+    WINDOW_HEIGHT = 600
+    BUTTON_WIDTH = 80
+    BUTTON_HEIGHT = 30
+    MARGIN = 10
+
+
+class LabelsConstants:
     APP_NAME = "PDF Merger"
     APP_WINDOW_HEIGHT = 500
     APP_WINDOW_WIDTH = 400

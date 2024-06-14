@@ -9,8 +9,9 @@ from PyPDF2 import PdfFileMerger
 from PyQt5.QtWidgets import QHBoxLayout, QWidget, QMainWindow, QTabWidget, QApplication
 
 from pdf_merger.src.services import ImageMergerService, PdfMergerService
-from pdf_merger.src.views import AppLayoutConfig, ViewAggregator
-from pdf_merger.src.views.labels import Labels
+from pdf_merger.src.ui.views.view_aggregator import ViewAggregator
+from pdf_merger.src.ui.components.app_layout_config import AppLayoutConfig
+from pdf_merger.src.ui.constants import LabelsConstants
 
 
 class AppConfigModule(Module):
@@ -22,7 +23,7 @@ class ViewAggregatorContainerModule(Module):
     def configure(self, binder: Binder) -> None:
         binder.bind(PdfMergerService, to=PdfMergerService(PdfFileMerger(), [], ""), scope=injector.singleton)
         binder.bind(ImageMergerService, to=ImageMergerService(img2pdf, [], ""), scope=injector.singleton)
-        binder.bind(Labels, to=Labels())
+        binder.bind(LabelsConstants, to=LabelsConstants())
         binder.bind(ViewAggregator, to=ViewAggregator, scope=injector.singleton)
 
 
@@ -45,8 +46,8 @@ class MergerApp(QMainWindow):
         self.setGeometry(self.config.left, self.config.top, self.config.width, self.config.height)
 
         self.tabs = QTabWidget()
-        self.tabs.addTab(self.viewAggregator.imageToPDFMergeView.get_widget(), Labels.IMAGE_TO_PDF_TAB_TITLE)
-        self.tabs.addTab(self.viewAggregator.pdfCollectionMergeView.get_widget(), Labels.MERGE_PDF_TAB_TITLE)
+        self.tabs.addTab(self.viewAggregator.imageToPDFMergeView.get_widget(), LabelsConstants.IMAGE_TO_PDF_TAB_TITLE)
+        self.tabs.addTab(self.viewAggregator.pdfCollectionMergeView.get_widget(), LabelsConstants.MERGE_PDF_TAB_TITLE)
 
         self.tabsLayout = QHBoxLayout()
         self.tabsLayout.addWidget(self.tabs)

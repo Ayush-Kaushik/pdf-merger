@@ -2,13 +2,13 @@
 
 from PyQt5.QtWidgets import QWidget, QFileDialog, QVBoxLayout, QLineEdit, QHBoxLayout, QLabel
 
-from pdf_merger.src.views.app_layout_config import AppLayoutConfig
-from pdf_merger.src.views.button_factory import ButtonFactory
-from pdf_merger.src.views.drag_drop_area import DragAndDropArea
-from pdf_merger.src.views.labels import Labels
-from pdf_merger.src.views.popup_factory import PopupFactory
+from pdf_merger.src.ui.components.app_layout_config import AppLayoutConfig
+from pdf_merger.src.ui.components.button_factory import ButtonFactory
+from pdf_merger.src.ui.components.drag_drop_area import DragAndDropArea
+from pdf_merger.src.ui.constants import LabelsConstants
+from pdf_merger.src.ui.components.popup_factory import PopupFactory
 
-from pdf_merger.src.services.abstract_merger_service import AbstractFileMergerService
+from pdf_merger.src.services.abstract_file_merger_service import AbstractFileMergerService
 
 '''
     Includes the complete view for Merging files into single PDF
@@ -20,7 +20,7 @@ class FileCollectionMergeView(QWidget):
             self,
             service: AbstractFileMergerService,
             config: AppLayoutConfig,
-            labels: Labels
+            labels: LabelsConstants
     ):
         super().__init__()
         self.fileMergerService = service
@@ -61,9 +61,9 @@ class FileCollectionMergeView(QWidget):
         self.textbox.setReadOnly(True)
         
         # Button to open dialog to select location to place merged file
-        self.saveButton = ButtonFactory.create("Save To", self.get_output_file_path)
-        self.deleteButton = ButtonFactory.create("Reset Files", self.reset_widget)
-        self.mergeButton = ButtonFactory.create("Merge Files", self.merge_files)
+        self.saveButton = ButtonFactory.create(self.labels.SAVE_TO, self.get_output_file_path)
+        self.deleteButton = ButtonFactory.create(self.labels.RESET, self.reset_widget)
+        self.mergeButton = ButtonFactory.create(self.labels.MERGE, self.merge_files)
         
         # PDF drag and drop area
         self.dragAndDropView = DragAndDropArea(self.fileMergerService)

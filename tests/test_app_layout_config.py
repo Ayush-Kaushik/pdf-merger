@@ -1,12 +1,12 @@
 import unittest
-from pdf_merger.src.views import AppLayoutConfig
-from pdf_merger.src.views.labels import Labels
+from pdf_merger.src.ui.components import AppLayoutConfig
+from pdf_merger.src.ui.constants import LabelsConstants
 
 
 class TestAppLayoutConfig(unittest.TestCase):
     def test_constructor_defaults(self):
         config = AppLayoutConfig()
-        self.assertEqual(config.title, Labels.APP_NAME)
+        self.assertEqual(config.title, LabelsConstants.APP_NAME)
         self.assertEqual(config.left, 10)
         self.assertEqual(config.top, 10)
         self.assertEqual(config.width, 800)

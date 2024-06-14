@@ -2,7 +2,7 @@
 
 import pathlib
 from PyPDF2 import PdfFileMerger
-from pdf_merger.src.services.abstract_merger_service import AbstractFileMergerService
+from pdf_merger.src.services.abstract_file_merger_service import AbstractFileMergerService
 
 '''
     Deals with operations related to PDF merging and creation
