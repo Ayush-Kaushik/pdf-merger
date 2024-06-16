@@ -19,10 +19,6 @@ class TestImagesToPdfService(unittest.TestCase):
             self.target_file_path)
 
     def test_merge_files(self):
-
-        print("Path of test file")
-        print()
-
         self.service.merge_files()
         self.assertTrue(self.service.target_file_path.exists())
 
@@ -37,8 +33,8 @@ class TestImagesToPdfService(unittest.TestCase):
         self.assertEqual(self.service.remove_prefix(text, prefix), "/path/to/image.png")
 
     def test_append_files(self):
-        item = QUrl.fromLocalFile("/path/to/new_image.jpg")
-        self.service.append_file(item)
+        new_file_path = QUrl.fromLocalFile("/path/to/new_image.jpg")
+        self.service.append_file(new_file_path)
         self.assertIn("/path/to/new_image.jpg", self.service.file_list)
 
     def test_clear_list(self):

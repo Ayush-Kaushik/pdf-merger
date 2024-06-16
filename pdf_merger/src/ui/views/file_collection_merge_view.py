@@ -27,7 +27,7 @@ class FileCollectionMergeView(QWidget):
         self.config = config
         self.labels = labels
         self.initialize_layout()
-    
+
     def get_output_file_path(self):
         directory = QFileDialog.getExistingDirectory(None, self.labels.CHOOSE_DIRECTORY, "")
         saved_file_path = ""
@@ -53,41 +53,37 @@ class FileCollectionMergeView(QWidget):
             self.reset_widget()
         
     def initialize_layout(self):
-        self.layout = QVBoxLayout()
-        
         # Input box that shows location of merged file
-        self.textbox = QLineEdit()
-        self.textbox.resize((self.config.width - 200), 40)
-        self.textbox.setReadOnly(True)
+        text_box = QLineEdit()
+        text_box.resize((self.config.width - 200), 40)
         
         # Button to open dialog to select location to place merged file
-        self.saveButton = ButtonFactory.create(self.labels.SAVE_TO, self.get_output_file_path)
-        self.deleteButton = ButtonFactory.create(self.labels.RESET, self.reset_widget)
-        self.mergeButton = ButtonFactory.create(self.labels.MERGE, self.merge_files)
+        save_button = ButtonFactory.create(self.labels.SAVE_TO, self.get_output_file_path)
+        delete_button = ButtonFactory.create(self.labels.RESET, self.reset_widget)
+        merge_button = ButtonFactory.create(self.labels.MERGE, self.merge_files)
         
         # PDF drag and drop area
-        self.dragAndDropView = DragAndDropArea(self.fileMergerService)
+        drag_drop_view = DragAndDropArea(self.fileMergerService)
 
         # Setup their layouts
-        self.verticalLayout = QVBoxLayout()
-
-        self.horizontalBoyLayout = QHBoxLayout()
-        self.horizontalBoyLayout.addWidget(self.textbox, 2)
-        self.horizontalBoyLayout.addWidget(self.saveButton, 0)
+        horizontal_box_layout = QHBoxLayout()
+        horizontal_box_layout.addWidget(text_box, 2)
+        horizontal_box_layout.addWidget(save_button, 0)
         
-        self.dragAndDropAreaLayout = QVBoxLayout()
-        self.dragAndDropAreaLayout.addWidget(QLabel("Drag and drop files below"))
-        self.dragAndDropAreaLayout.addWidget(self.dragAndDropView)
+        drag_drop_area_layout = QVBoxLayout()
+        drag_drop_area_layout.addWidget(QLabel(self.labels.DRAG_AND_DROP_FILES))
+        drag_drop_area_layout.addWidget(drag_drop_view)
 
-        self.callToActionLayout = QHBoxLayout()
-        self.callToActionLayout.addWidget(self.deleteButton, 1)
-        self.callToActionLayout.addWidget(self.mergeButton, 1)
+        call_to_action_layout = QHBoxLayout()
+        call_to_action_layout.addWidget(delete_button, 1)
+        call_to_action_layout.addWidget(merge_button, 1)
 
-        self.verticalLayout.addLayout(self.horizontalBoyLayout)
-        self.verticalLayout.addLayout(self.dragAndDropAreaLayout)
-        self.verticalLayout.addLayout(self.callToActionLayout)
-        
-        self.setLayout(self.verticalLayout)
+        vertical_layout = QVBoxLayout()
+        vertical_layout.addLayout(horizontal_box_layout)
+        vertical_layout.addLayout(drag_drop_area_layout)
+        vertical_layout.addLayout(call_to_action_layout)
+
+        self.setLayout(vertical_layout)
         
     def get_widget(self):
         return self

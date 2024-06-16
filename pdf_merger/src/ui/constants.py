@@ -15,6 +15,7 @@ class LabelsConstants:
     IMAGE_TO_PDF_TAB_TITLE = "Merge Images to PDF"
     MERGE_PDF_TAB_TITLE = "Merge PDFs to PDF"
     CHOOSE_DIRECTORY = "Choose Directory"
+    DRAG_AND_DROP_FILES = "Drag and drop files below"
     SAVE_TO = "Save To.."
     RESET = "Reset"
     MERGE = "Merge"

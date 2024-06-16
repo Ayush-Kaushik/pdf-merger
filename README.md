@@ -55,14 +55,3 @@ The tool currently supports following formats:
   
 ## 📝 License <a name = "acknowledgement"></a>  
 - MIT
-
-## TO DO
-
-### Milestone 1
-
-- [ ] Fix all the test cases
-- [ ] Update the website for the merger
-- [ ] Find out how to increase version number via actions
-- [ ] Find out how to create a download link for this service
-
-
