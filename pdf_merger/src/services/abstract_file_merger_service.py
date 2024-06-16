@@ -2,7 +2,7 @@
 
 from abc import abstractmethod, ABC
 
-import pathlib
+from pathlib import Path
 from typing import Dict, List
 
 
@@ -10,8 +10,8 @@ class AbstractFileMergerService(ABC):
     def __init__(
             self,
             allowed_extensions: Dict[str, str],
-            file_list: List[pathlib.Path],
-            target_file_path: pathlib.Path
+            file_list: List[Path],
+            target_file_path: Path
     ):
         self.allowed_file_extensions = allowed_extensions
         self.target_file_path = target_file_path
@@ -28,15 +28,15 @@ class AbstractFileMergerService(ABC):
         """
         Clears the file list.
         """
-        self.file_list: list[pathlib.Path] = []
+        self.file_list: List[Path] = []
 
-    def append_file(self, file_path: pathlib.Path):
+    def append_file(self, file_path: Path):
         """
         Appends a file to the file list.
         """
         self.file_list.append(file_path)
 
-    def set_output_target(self, file_path: pathlib.Path):
+    def set_output_target(self, file_path: Path):
         """
         Sets the output target file path.
         """

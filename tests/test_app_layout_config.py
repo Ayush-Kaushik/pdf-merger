@@ -1,3 +1,5 @@
+# Author: Ayush Kaushik
+
 import unittest
 from pdf_merger.src.ui.components import AppLayoutConfig
 from pdf_merger.src.ui.constants import LabelsConstants

@@ -1,7 +1,7 @@
 # Author: Ayush Kaushik
 from typing import List
 
-import pathlib
+from pathlib import Path
 import img2pdf
 from .abstract_file_merger_service import AbstractFileMergerService
 
@@ -11,7 +11,7 @@ from .abstract_file_merger_service import AbstractFileMergerService
 
 
 class ImageMergerService(AbstractFileMergerService):
-    def __init__(self, merger: img2pdf, file_list: List[pathlib.Path], target_path: pathlib.Path):
+    def __init__(self, merger: img2pdf, file_list: List[Path], target_path: Path):
         super().__init__({
             ".jpg": ".jpg",
             ".jpeg": ".jpeg",

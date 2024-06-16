@@ -1,9 +1,9 @@
 # Author: Ayush Kaushik
 
-import pathlib
+from pathlib import Path
 from typing import List
 
-from PyPDF2 import PdfFileMerger
+from PyPDF2 import PdfMerger
 from .abstract_file_merger_service import AbstractFileMergerService
 
 '''
@@ -14,9 +14,9 @@ from .abstract_file_merger_service import AbstractFileMergerService
 class PdfMergerService(AbstractFileMergerService):
     def __init__(
             self,
-            merger: PdfFileMerger,
-            path_list: List[pathlib.Path],
-            target_path: pathlib.Path
+            merger: PdfMerger,
+            path_list: List[Path],
+            target_path: Path
     ):
         super().__init__(
             {".pdf": ".pdf"},
@@ -26,5 +26,5 @@ class PdfMergerService(AbstractFileMergerService):
 
     def merge_files(self):
         for file in self.file_list:
-            self.merger.append(file)
+            self.merger.append(file.as_uri())
         self.merger.write(self.target_file_path)
