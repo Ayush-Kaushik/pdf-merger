@@ -1,4 +1,5 @@
 # Author: Ayush Kaushik
+import pathlib
 
 from PyQt5.QtWidgets import QWidget, QFileDialog, QVBoxLayout, QLineEdit, QHBoxLayout, QLabel
 
@@ -11,7 +12,7 @@ from pdf_merger.src.ui.components.popup_factory import PopupFactory
 from pdf_merger.src.services.abstract_file_merger_service import AbstractFileMergerService
 
 '''
-    Includes the complete view for Merging files into single PDF
+    Includes the complete view for Merging files into single PDF.
 '''
 
 
@@ -23,6 +24,10 @@ class FileCollectionMergeView(QWidget):
             labels: LabelsConstants
     ):
         super().__init__()
+        self.merge_button = None
+        self.delete_button = None
+        self.save_button = None
+        self.text_box = None
         self.fileMergerService = service
         self.config = config
         self.labels = labels
@@ -37,7 +42,7 @@ class FileCollectionMergeView(QWidget):
         self.textbox.setText(saved_file_path)
         
     def reset_widget(self):
-        self.fileMergerService.set_output_target("")
+        self.fileMergerService.set_output_target(pathlib.Path())
         self.textbox.setText(self.fileMergerService.target_file_path)
         self.fileMergerService.clear_list()
         self.dragAndDropView.clear_area()
@@ -46,6 +51,7 @@ class FileCollectionMergeView(QWidget):
         try:
             self.fileMergerService.merge_files()
             popup = PopupFactory.get("Info", "Task Successful!")
+            # TODO Switch these to constants
             popup.exec_()
         except Exception as exception:
             print(exception)
@@ -54,29 +60,29 @@ class FileCollectionMergeView(QWidget):
         
     def initialize_layout(self):
         # Input box that shows location of merged file
-        text_box = QLineEdit()
-        text_box.resize((self.config.width - 200), 40)
+        self.text_box = QLineEdit()
+        self.text_box.resize((self.config.width - 200), 40)
         
         # Button to open dialog to select location to place merged file
-        save_button = ButtonFactory.create(self.labels.SAVE_TO, self.get_output_file_path)
-        delete_button = ButtonFactory.create(self.labels.RESET, self.reset_widget)
-        merge_button = ButtonFactory.create(self.labels.MERGE, self.merge_files)
+        self.save_button = ButtonFactory.create(self.labels.SAVE_TO, self.get_output_file_path)
+        self.delete_button = ButtonFactory.create(self.labels.RESET, self.reset_widget)
+        self.merge_button = ButtonFactory.create(self.labels.MERGE, self.merge_files)
         
         # PDF drag and drop area
         drag_drop_view = DragAndDropArea(self.fileMergerService)
 
         # Setup their layouts
         horizontal_box_layout = QHBoxLayout()
-        horizontal_box_layout.addWidget(text_box, 2)
-        horizontal_box_layout.addWidget(save_button, 0)
+        horizontal_box_layout.addWidget(self.text_box, 2)
+        horizontal_box_layout.addWidget(self.save_button, 0)
         
         drag_drop_area_layout = QVBoxLayout()
         drag_drop_area_layout.addWidget(QLabel(self.labels.DRAG_AND_DROP_FILES))
         drag_drop_area_layout.addWidget(drag_drop_view)
 
         call_to_action_layout = QHBoxLayout()
-        call_to_action_layout.addWidget(delete_button, 1)
-        call_to_action_layout.addWidget(merge_button, 1)
+        call_to_action_layout.addWidget(self.delete_button, 1)
+        call_to_action_layout.addWidget(self.merge_button, 1)
 
         vertical_layout = QVBoxLayout()
         vertical_layout.addLayout(horizontal_box_layout)

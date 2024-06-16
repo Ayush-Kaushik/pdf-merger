@@ -13,14 +13,15 @@ class TestImagesToPdfService(unittest.TestCase):
         self.service = ImageMergerService(
             img2pdf,
             [
-                test_path + "/tests/data/image/file_example_JPG_1MB.jpg",
-                test_path + "/tests/data/image/file_example_JPG_1MB.jpg"
+                pathlib.Path(test_path + "/tests/data/image/file_example_JPG_1MB.jpg"),
+                pathlib.Path(test_path + "/tests/data/image/file_example_JPG_1MB.jpg")
             ],
             self.target_file_path)
 
     def test_merge_files(self):
         self.service.merge_files()
         self.assertTrue(self.service.target_file_path.exists())
+        # TODO perform validation by opening the file and check if it can be opened
 
     def test_set_target_path(self):
         new_target_path = pathlib.Path("./tests/output/image.pdf")
