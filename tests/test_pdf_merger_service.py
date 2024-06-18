@@ -2,7 +2,7 @@
 
 import unittest
 from pathlib import Path
-
+from typing import List
 
 from PyPDF2 import PdfMerger, PdfReader
 
@@ -39,7 +39,7 @@ class TestPdfMergerService(unittest.TestCase):
 
     def test_clear_list(self):
         self.service.clear_list()
-        # TODO perform type check as well for the path list set
+        self.assertTrue(isinstance(self.service.file_list, List))
         self.assertEqual(len(self.service.file_list), 0)
 
     def test_append_file(self):
@@ -49,7 +49,6 @@ class TestPdfMergerService(unittest.TestCase):
 
     def test_set_output_target(self):
         new_target_path = Path('new_merged_file.pdf')
-        # TODO should set file path have validation?
         self.service.set_output_target(new_target_path)
         self.assertEqual(self.service.get_output_target(), new_target_path)
 

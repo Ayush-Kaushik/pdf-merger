@@ -1,13 +1,13 @@
 # Author: Ayush Kaushik
-import pathlib
 
 from PyQt5.QtWidgets import QWidget, QFileDialog, QVBoxLayout, QLineEdit, QHBoxLayout, QLabel
 
+from pathlib import Path
 from pdf_merger.src.ui.components.app_layout_config import AppLayoutConfig
 from pdf_merger.src.ui.components.button_factory import ButtonFactory
 from pdf_merger.src.ui.components.drag_drop_area import DragAndDropArea
 from pdf_merger.src.ui.constants import LabelsConstants
-from pdf_merger.src.ui.components.popup_factory import PopupFactory
+from pdf_merger.src.ui.components.popup_factory import PopupFactory, PopupType
 
 from pdf_merger.src.services.abstract_file_merger_service import AbstractFileMergerService
 
@@ -39,19 +39,19 @@ class FileCollectionMergeView(QWidget):
         if directory != "":
             saved_file_path = directory + "/merged.pdf"
             self.fileMergerService.set_output_target(saved_file_path)
-        self.textbox.setText(saved_file_path)
+        self.text_box.setText(saved_file_path)
         
     def reset_widget(self):
         self.fileMergerService.set_output_target(pathlib.Path())
         self.textbox.setText(self.fileMergerService.target_file_path)
+        self.text_box.setText(str(self.fileMergerService.target_file_path))
         self.fileMergerService.clear_list()
         self.dragAndDropView.clear_area()
 
     def merge_files(self):
         try:
             self.fileMergerService.merge_files()
-            popup = PopupFactory.get("Info", "Task Successful!")
-            # TODO Switch these to constants
+            popup = PopupFactory.get(PopupType.INFO, "Task Successful!")
             popup.exec_()
         except Exception as exception:
             print(exception)

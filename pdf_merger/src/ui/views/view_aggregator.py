@@ -21,5 +21,5 @@ class ViewAggregator:
             widget_layout_config: AppLayoutConfig,
             labels: LabelsConstants
     ):
-        self.imageToPDFMergeView = FileCollectionMergeView(pdf_service, widget_layout_config, labels)
-        self.pdfCollectionMergeView = FileCollectionMergeView(image_service, widget_layout_config, labels)
+        self.imageToPDFMergeView = FileCollectionMergeView(image_service, widget_layout_config, labels)
+        self.pdfCollectionMergeView = FileCollectionMergeView(pdf_service, widget_layout_config, labels)

@@ -4,7 +4,7 @@ import os
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAbstractItemView, QListWidget
 from pdf_merger.src.exceptions import InvalidExtensionError
-from pdf_merger.src.ui.components.popup_factory import PopupFactory
+from pdf_merger.src.ui.components.popup_factory import PopupFactory, PopupType
 from pdf_merger.src.services.abstract_file_merger_service import AbstractFileMergerService
 
 '''
@@ -57,7 +57,7 @@ class DragAndDropArea(QListWidget):
                             raise InvalidExtensionError(
                                 self.service.allowed_file_extensions)
             except InvalidExtensionError as invalidExtensionException:
-                popup = PopupFactory.get("Error", invalidExtensionException.message)
+                popup = PopupFactory.get(PopupType.ERROR, invalidExtensionException.message)
                 popup.exec_()
         else:
             return super().dropEvent(event)

@@ -22,7 +22,6 @@ class ImageMergerService(AbstractFileMergerService):
 
         self.merger = merger
         self.file_list = file_list if file_list is not None else []
-        # TODO check if list of paths works out of the box
         self.target_file_path = target_path
 
     @staticmethod

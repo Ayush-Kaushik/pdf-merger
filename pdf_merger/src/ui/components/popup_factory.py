@@ -1,15 +1,21 @@
 # Author: Ayush Kaushik
 
 from PyQt5.QtWidgets import QMessageBox
+from enum import Enum
+
+
+class PopupType(Enum):
+    INFO = "Info"
+    ERROR = "Error"
 
 
 class PopupFactory:
     @staticmethod
     def get(popup_type, message):
         try:
-            if popup_type == "Info":
+            if popup_type == PopupType.INFO:
                 return InfoPopup(message)
-            if popup_type == "Error":
+            if popup_type == PopupType.ERROR:
                 return ErrorPopup(message)
             raise AssertionError("Popup type not found")
         except AssertionError as exception:

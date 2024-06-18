@@ -1,6 +1,7 @@
 # Author: Ayush Kaushik
 
 import sys
+from pathlib import Path
 
 import injector
 from injector import Injector, inject, Module, Binder
@@ -21,8 +22,8 @@ class AppConfigModule(Module):
 
 class ViewAggregatorContainerModule(Module):
     def configure(self, binder: Binder) -> None:
-        binder.bind(PdfMergerService, to=PdfMergerService(PdfFileMerger(), [], ""), scope=injector.singleton)
-        binder.bind(ImageMergerService, to=ImageMergerService(img2pdf, [], ""), scope=injector.singleton)
+        binder.bind(PdfMergerService, to=PdfMergerService(PdfFileMerger(), [], Path()), scope=injector.singleton)
+        binder.bind(ImageMergerService, to=ImageMergerService(img2pdf, [], Path()), scope=injector.singleton)
         binder.bind(LabelsConstants, to=LabelsConstants())
         binder.bind(ViewAggregator, to=ViewAggregator, scope=injector.singleton)
 
