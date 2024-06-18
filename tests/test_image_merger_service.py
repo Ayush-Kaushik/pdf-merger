@@ -1,9 +1,9 @@
 # Author: Ayush Kaushik
 
 import unittest
-
-import PyPDF2
 import img2pdf
+
+from PyPDF2 import PdfReader
 from pathlib import Path
 from pdf_merger.src.services import ImageMergerService
 
@@ -11,14 +11,15 @@ from pdf_merger.src.services import ImageMergerService
 class TestImagesToPdfService(unittest.TestCase):
     def setUp(self):
         test_path = str(Path(__file__).parent.resolve())
-        self.target_file_path = Path(test_path + "/output/test_output.pdf")
+        self.target_file_path = Path(test_path + "/output/test_image_merge_output.pdf")
+        self.file_list = [
+                Path(test_path + "/data/image/file_example_JPG_1MB.jpg"),
+                Path(test_path + "/data/image/file_example_JPG_1MB.jpg")
+            ]
 
         self.service = ImageMergerService(
             img2pdf,
-            [
-                Path(test_path + "/data/image/file_example_JPG_1MB.jpg"),
-                Path(test_path + "/data/image/file_example_JPG_1MB.jpg")
-            ],
+            self.file_list,
             self.target_file_path)
 
     def test_merge_files(self):
@@ -29,14 +30,16 @@ class TestImagesToPdfService(unittest.TestCase):
     def validate_pdf(self) -> bool:
         try:
             with open(self.target_file_path, 'rb') as file:
-                reader = PyPDF2.PdfReader(file)
+                reader = PdfReader(file)
+                if len(reader.pages) != len(self.file_list):  # easy to assert since there is one image per file
+                    return False
+
                 first_page = reader.pages[0]
                 text = first_page.extract_text()
                 if text is None:
-                    raise ValueError("Merged file is invalid.")
-                return False
-            return True
-        except Exception as e:
+                    return False
+                return True
+        except:
             return False
 
     def test_set_target_path(self):

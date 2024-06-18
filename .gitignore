@@ -138,4 +138,4 @@ report.html
 .DS_Store
 tests/.DS_Store
 tests/data/.DS_Store
-tests/output/*.pdf
+tests/output/*

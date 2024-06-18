@@ -26,5 +26,6 @@ class PdfMergerService(AbstractFileMergerService):
 
     def merge_files(self):
         for file in self.file_list:
-            self.merger.append(file.as_uri())
-        self.merger.write(self.target_file_path)
+            self.merger.append(str(file))  # solution: https://docs.python.org/3/library/pathlib.html#general-properties
+        self.merger.write(str(self.target_file_path))
+
