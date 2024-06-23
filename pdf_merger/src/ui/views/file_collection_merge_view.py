@@ -35,7 +35,7 @@ class FileCollectionMergeView(QWidget):
         self.initialize_layout()
 
     def get_output_file_path(self):
-        save_file_path: Path = Path()
+        save_file_path: str = ""
         directory = QFileDialog.getExistingDirectory(None, self.labels.CHOOSE_DIRECTORY, "")
 
         if directory != "":
@@ -61,6 +61,7 @@ class FileCollectionMergeView(QWidget):
     def initialize_layout(self):
         # Input box that shows location of merged file
         self.text_box = QLineEdit()
+        self.text_box.setDisabled(True)
         self.text_box.resize((self.config.width - 200), 40)
         
         # Button to open dialog to select location to place merged file
