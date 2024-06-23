@@ -22,7 +22,7 @@ jobs:
         
         powershell -Command "Invoke-WebRequest -Uri https://github.com/upx/upx/releases/download/v3.96/upx-3.96-win64.zip -OutFile upx.zip"
         powershell -Command "Expand-Archive upx.zip -DestinationPath upx"
-        set PATH=%PATH%;%CD%\upx
+        set PATH=%PATH%;%WORKSPACE%\upx
 
     - name: Check contents of workspace
       run: |
