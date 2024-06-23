@@ -33,14 +33,16 @@ class ImageMergerService(AbstractFileMergerService):
             return text[len(prefix):]
         return text
 
-    def merge_files(self):
+    def merge_files(self) -> bool:
         if not self.target_file_path:
             print("Target file path is not set.")
-            return
+            return False
         try:
             with open(self.target_file_path, "ab") as f:
                 f.write(self.merger.convert(self.file_list))
             print("Files merged successfully.")
+            return True
         except Exception as exception:
             print("Exception occurred during merging images")
             print(exception)
+            return False

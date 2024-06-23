@@ -1,6 +1,7 @@
 # Author: Ayush Kaushik
 
 import os
+from pathlib import Path
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAbstractItemView, QListWidget
 from pdf_merger.src.exceptions import InvalidExtensionError
@@ -51,7 +52,7 @@ class DragAndDropArea(QListWidget):
                     if url.isLocalFile():
                         filename, file_extension = os.path.splitext(url.toString())
                         if file_extension in self.service.allowed_file_extensions:
-                            self.service.append_file(url)
+                            self.service.append_file(Path(url.toLocalFile()))
                             self.addItem(str(url.toLocalFile()))
                         else:
                             raise InvalidExtensionError(

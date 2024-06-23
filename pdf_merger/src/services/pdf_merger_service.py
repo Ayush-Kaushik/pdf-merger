@@ -24,8 +24,14 @@ class PdfMergerService(AbstractFileMergerService):
             target_path)
         self.merger = merger
 
-    def merge_files(self):
-        for file in self.file_list:
-            self.merger.append(str(file))  # solution: https://docs.python.org/3/library/pathlib.html#general-properties
-        self.merger.write(str(self.target_file_path))
-
+    def merge_files(self) -> bool:
+        try:
+            for file in self.file_list:
+                self.merger.append(str(file))
+                # solution: https://docs.python.org/3/library/pathlib.html#general-properties
+            self.merger.write(str(self.target_file_path))
+            return True
+        except Exception as exception:
+            print("Exception occurred during merging PDFs")
+            print(exception)
+            return False
