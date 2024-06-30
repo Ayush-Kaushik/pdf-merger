@@ -23,7 +23,7 @@ jobs:
         Invoke-WebRequest -Uri https://github.com/upx/upx/releases/download/v3.96/upx-3.96-win64.zip -OutFile upx.zip
         Expand-Archive upx.zip "${env:GITHUB_WORKSPACE}\upx"
         $upxPath = "${env:GITHUB_WORKSPACE}\upx"
-        $env:PATH += ";$upxPath"
+        [Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";" + $upxPath, [System.EnvironmentVariableTarget]::Process)
         upx -v
 
     - name: Check contents of workspace
