@@ -31,6 +31,7 @@ jobs:
 
     - name: Build with pyinstaller
       run: |
+        Write-Host $env:PATH
         pyinstaller program_build.spec
 
     - name: Check contents of workspace
