@@ -20,9 +20,10 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install -r requirements.txt
         
-        powershell -Command "Invoke-WebRequest -Uri https://github.com/upx/upx/releases/download/v3.96/upx-3.96-win64.zip -OutFile upx.zip"
-        powershell -Command "Expand-Archive upx.zip ${GITHUB_WORKSPACE} upx"
-        set PATH=%PATH%;%GITHUB_WORKSPACE%\upx
+        Invoke-WebRequest -Uri https://github.com/upx/upx/releases/download/v3.96/upx-3.96-win64.zip -OutFile upx.zip
+        Expand-Archive upx.zip ${GITHUB_WORKSPACE} upx
+        $upxPath = "${GITHUB_WORKSPACE}\upx"
+        [System.Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";" + $upxPath, [System.EnvironmentVariableTarget]::Process)
 
     - name: Check contents of workspace
       run: |
