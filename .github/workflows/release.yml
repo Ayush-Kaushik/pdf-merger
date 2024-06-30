@@ -26,7 +26,7 @@ jobs:
         cd "${env:GITHUB_WORKSPACE}\upx"
         ls
         
-        $upxPath = "${env:GITHUB_WORKSPACE}\upx"
+        $upxPath = "${env:GITHUB_WORKSPACE}\upx\upx-3.96-win64\"
         [Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";" + $upxPath, [System.EnvironmentVariableTarget]::Process)
         upx -v
 
