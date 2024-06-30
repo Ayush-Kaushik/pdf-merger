@@ -1,0 +1,71 @@
+name: PDF Merger [release]
+
+on:
+  pull_request:
+    branches: [ release ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
+        
+        Invoke-WebRequest -Uri https://github.com/upx/upx/releases/download/v3.96/upx-3.96-win64.zip -OutFile upx.zip
+        Expand-Archive upx.zip "${env:GITHUB_WORKSPACE}\upx"        
+        $upxPath = "${env:GITHUB_WORKSPACE}\upx\upx-3.96-win64\"
+        [Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";" + $upxPath, [System.EnvironmentVariableTarget]::Machine)
+
+    - name: Check contents of workspace
+      run: |
+        ls
+
+    - name: Build with pyinstaller
+      run: |
+        Write-Host $env:PATH
+        pyinstaller program_build.spec
+
+    - name: Check contents of workspace
+      run: |
+        ls
+        cd build
+        ls
+    
+    - name: Zip the build artifacts
+      run: 7z a release.zip dist\Program.exe
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.run_number }}
+        release_name: Release ${{ github.run_number }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        # Pulls from the CREATE RELEASE step above,
+        # referencing its ID to get its outputs object,
+        # which include a `upload_url`.
+        # See this blog post for more info:
+        # https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./release.zip
+        asset_name: release.zip
+        asset_content_type: application/zip
