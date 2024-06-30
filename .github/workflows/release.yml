@@ -24,7 +24,7 @@ jobs:
         Expand-Archive upx.zip "${env:GITHUB_WORKSPACE}\upx"
         
         cd "${env:GITHUB_WORKSPACE}\upx"
-        ls -la
+        ls
         
         $upxPath = "${env:GITHUB_WORKSPACE}\upx"
         [Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";" + $upxPath, [System.EnvironmentVariableTarget]::Process)
