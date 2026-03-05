@@ -1,10 +1,10 @@
 # __init__.py
 
-from .constants import UILayoutConstants, LabelsConstants
+from .constants import Labels, LayoutConfig
 
 __all__ = [
-    'UILayoutConstants',
-    'LabelsConstants'
+    'Labels',
+    'LayoutConfig'
 ]
 
 VERSION = '1.0.0'
