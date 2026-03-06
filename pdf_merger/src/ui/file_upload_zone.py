@@ -5,11 +5,10 @@ from PyQt5.QtGui import QFont
 class FileUploadZone(QWidget):
     filesSelected = pyqtSignal(list)
 
-    def __init__(self, accept: str, multiple: bool = True, mode: str = "pdf"):
+    def __init__(self, accept: str, mode: str = "pdf"):
         super().__init__()
 
         self.accept = accept
-        self.multiple = multiple
         self.mode = mode
         self.selected_files = []
 

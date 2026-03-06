@@ -5,13 +5,13 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class LayoutConfig:
     """Configuration for the layout of the application."""
-    WINDOW_WIDTH: int   = 800
-    WINDOW_HEIGHT: int  = 600
-    WINDOW_X_POS: int    = 100
-    WINDOW_Y_POS: int    = 100
-    BUTTON_WIDTH: int   = 80
-    BUTTON_HEIGHT: int  = 30
-    MARGIN: int         = 10
+    WINDOW_WIDTH: int       = 800
+    WINDOW_HEIGHT: int      = 600
+    WINDOW_X_POS: int       = 100
+    WINDOW_Y_POS: int       = 100
+    BUTTON_WIDTH: int       = 80
+    BUTTON_HEIGHT: int      = 30
+    MARGIN: int             = 10
 
 @dataclass(frozen=True)
 class Labels:

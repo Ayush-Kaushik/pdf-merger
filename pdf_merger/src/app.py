@@ -2,10 +2,20 @@
 
 import sys
 from PyQt5.QtWidgets import (
-    QMainWindow, QApplication, QWidget, QPushButton, QVBoxLayout,
-    QHBoxLayout, QStackedWidget
+    QMainWindow, 
+    QApplication, 
+    QWidget, 
+    QPushButton, 
+    QVBoxLayout,
+    QHBoxLayout, 
+    QStackedWidget
 )
+
 from PyQt5.QtCore import Qt
+
+from pdf_merger.src.services.image_merger_service import ImageMergerService
+from pdf_merger.src.services.pdf_merger_service import PdfMergerService
+
 from pdf_merger.src.ui.view_aggregator import ViewAggregator
 from pdf_merger.src.ui.constants import Labels, LayoutConfig
 
@@ -15,7 +25,10 @@ class MergerApp(QMainWindow):
         super().__init__()
         self._labels = Labels()
         self._layout_config = LayoutConfig()
-        self._view_aggregator = ViewAggregator(self._layout_config, self._labels)
+        self._view_aggregator = ViewAggregator(
+            self._labels, 
+            pdf_merger_service=PdfMergerService(), 
+            image_merger_service=ImageMergerService())
 
         # Keep track of active mode
         self.active_mode_index = 0  # 0 = PDFs, 1 = Images
@@ -38,7 +51,7 @@ class MergerApp(QMainWindow):
         central_widget.setLayout(main_layout)
         self.setCentralWidget(central_widget)
 
-        # 1️⃣ Mode Buttons (like web tabs)
+        # Mode Buttons (like web tabs)
         self.mode_buttons_layout = QHBoxLayout()
         self.merge_pdf_btn = QPushButton(self._labels.IMAGE_TO_PDF_TAB_TITLE)
         self.image_to_pdf_btn = QPushButton(self._labels.MERGE_PDF_TAB_TITLE)
@@ -49,7 +62,7 @@ class MergerApp(QMainWindow):
         self.mode_buttons_layout.addWidget(self.image_to_pdf_btn)
         main_layout.addLayout(self.mode_buttons_layout)
 
-        # 2️⃣ Stacked widget for pages
+        # Stacked widget for pages
         self.stacked = QStackedWidget()
         self.stacked.addWidget(self._view_aggregator.image_to_pdf_merge_view.get_widget())
         self.stacked.addWidget(self._view_aggregator.pdf_collection_merge_view.get_widget())
@@ -69,7 +82,8 @@ class MergerApp(QMainWindow):
     def _switch_mode(self, index: int):
         """Switch stacked widget page and update button styles."""
         if index == self.active_mode_index:
-            return  # Already active
+            return
+        
         self.active_mode_index = index
         self.stacked.setCurrentIndex(index)
         self._update_mode_buttons()

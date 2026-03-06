@@ -139,3 +139,6 @@ report.html
 tests/.DS_Store
 tests/data/.DS_Store
 tests/output/*
+
+# VS Code files
+.vscode/*
