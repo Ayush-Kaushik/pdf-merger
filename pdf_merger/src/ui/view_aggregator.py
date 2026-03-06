@@ -19,10 +19,14 @@ class ViewAggregator:
 
         self.image_to_pdf_merge_view = FileCollectionMergeView(
             self._image_merger_service, 
-            self._labels
+            self._labels,
+            "Image Files (*.png *.jpg *.jpeg)",
+            "image"
         )
         
         self.pdf_collection_merge_view = FileCollectionMergeView(
             self._pdf_merger_service, 
-            self._labels
+            self._labels,
+            "PDF Files (*.pdf)",
+            "pdf"
         )

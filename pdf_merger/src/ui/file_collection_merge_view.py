@@ -18,12 +18,14 @@ from pdf_merger.src.ui.file_upload_zone import FileUploadZone
 from pdf_merger.src.ui.constants import Labels
 
 class FileCollectionMergeView(QWidget):
-    def __init__(self, service: PdfMergerService |  ImageMergerService, labels: Labels = None):
+    def __init__(self, service: PdfMergerService |  ImageMergerService, labels: Labels = None, accepted_file_types: str = "", mode: str = ""):
         super().__init__()
 
         self.fileMergerService = service
         self.merge_job = MergeJob()
         self.labels = labels
+        self.accepted_file_types = accepted_file_types
+        self.mode = mode
 
         self.text_box = None
         self.save_button = None
@@ -112,7 +114,7 @@ class FileCollectionMergeView(QWidget):
         horizontal_box_layout.addWidget(self.save_button, 1)
 
         # ---------------- File Upload ----------------
-        self.drag_drop_view = FileUploadZone(accept="PDF Files (*.pdf)", mode="pdf")
+        self.drag_drop_view = FileUploadZone(accept=self.accepted_file_types, mode=self.mode)
         self.drag_drop_view.filesSelected.connect(self.handle_selected_files)
 
         # ---------------- Bottom Buttons ----------------
