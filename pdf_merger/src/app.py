@@ -16,8 +16,13 @@ from PyQt5.QtCore import Qt
 from pdf_merger.src.services.image_merger_service import ImageMergerService
 from pdf_merger.src.services.pdf_merger_service import PdfMergerService
 
+from pdf_merger.src.ui.themes.theme_provider import ThemeProvider
 from pdf_merger.src.ui.view_aggregator import ViewAggregator
 from pdf_merger.src.ui.constants import Labels, LayoutConfig
+
+# Keep track of active mode
+MODE_PDF_MERGE = 0
+MODE_IMAGE_TO_PDF = 1
 
 class MergerApp(QMainWindow):
     """Main window for the PDF Merger application using button-based tabs."""
@@ -30,9 +35,7 @@ class MergerApp(QMainWindow):
             pdf_merger_service=PdfMergerService(), 
             image_merger_service=ImageMergerService())
 
-        # Keep track of active mode
-        self.active_mode_index = 0  # 0 = PDFs, 1 = Images
-
+        self.active_mode_index = MODE_PDF_MERGE
         self._setup_ui()
 
     def _setup_ui(self):
@@ -53,10 +56,11 @@ class MergerApp(QMainWindow):
 
         # Mode Buttons (like web tabs)
         self.mode_buttons_layout = QHBoxLayout()
-        self.merge_pdf_btn = QPushButton(self._labels.IMAGE_TO_PDF_TAB_TITLE)
-        self.image_to_pdf_btn = QPushButton(self._labels.MERGE_PDF_TAB_TITLE)
-        self._setup_mode_button(self.merge_pdf_btn, index=0)
-        self._setup_mode_button(self.image_to_pdf_btn, index=1)
+        self.merge_pdf_btn = QPushButton(self._labels.MERGE_PDF_TAB_TITLE)
+        self.image_to_pdf_btn = QPushButton(self._labels.IMAGE_TO_PDF_TAB_TITLE)
+
+        self._setup_mode_button(self.merge_pdf_btn, index=MODE_PDF_MERGE)
+        self._setup_mode_button(self.image_to_pdf_btn, index=MODE_IMAGE_TO_PDF)
 
         self.mode_buttons_layout.addWidget(self.merge_pdf_btn)
         self.mode_buttons_layout.addWidget(self.image_to_pdf_btn)
@@ -76,7 +80,6 @@ class MergerApp(QMainWindow):
         button.setCheckable(True)
         button.setCursor(Qt.PointingHandCursor)
         button.setMinimumHeight(50)
-        button.setStyleSheet(self._mode_button_style(active=False))
         button.clicked.connect(lambda checked, i=index: self._switch_mode(i))
 
     def _switch_mode(self, index: int):
@@ -93,44 +96,19 @@ class MergerApp(QMainWindow):
         self.merge_pdf_btn.setChecked(self.active_mode_index == 0)
         self.image_to_pdf_btn.setChecked(self.active_mode_index == 1)
 
-        self.merge_pdf_btn.setStyleSheet(
-            self._mode_button_style(active=self.active_mode_index == 0)
-        )
-        self.image_to_pdf_btn.setStyleSheet(
-            self._mode_button_style(active=self.active_mode_index == 1)
-        )
+        self.merge_pdf_btn.setProperty("active", self.active_mode_index == 0)
+        self.image_to_pdf_btn.setProperty("active", self.active_mode_index == 1)
 
-    def _mode_button_style(self, active: bool) -> str:
-        """Return stylesheet for mode buttons."""
-        if active:
-            return """
-                QPushButton {
-                    background-color: #3b82f6;
-                    color: white;
-                    font-weight: bold;
-                    font-size: 16px;
-                    border-radius: 12px;
-                }
-                QPushButton:hover {
-                    background-color: #2563eb;
-                }
-            """
-        else:
-            return """
-                QPushButton {
-                    background-color: #e5e7eb;
-                    color: #6b7280;
-                    font-weight: normal;
-                    font-size: 16px;
-                    border-radius: 12px;
-                }
-                QPushButton:hover {
-                    background-color: #d1d5db;
-                }
-            """
+        # Force re-polish so QSS reacts to property change 
+        # TODO: Note expensive operation, optimize it
+        for btn in [self.merge_pdf_btn, self.image_to_pdf_btn]:
+            btn.style().unpolish(btn)
+            btn.style().polish(btn)
+            btn.update()
 
 def main():
     app = QApplication(sys.argv)
+    ThemeProvider.apply_theme(app, "light")
     window = MergerApp()
     window.show()
     sys.exit(app.exec_())
