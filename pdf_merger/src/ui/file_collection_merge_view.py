@@ -8,145 +8,176 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QHBoxLayout,
     QMessageBox,
-    QPushButton
+    QPushButton,
+    QFrame
 )
+from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtGui import QFont
 
-from pdf_merger.src.data.merge_job import MergeJob
-from pdf_merger.src.services.image_merger_service import ImageMergerService
-from pdf_merger.src.services.pdf_merger_service import PdfMergerService
 from pdf_merger.src.ui.file_upload_zone import FileUploadZone
 from pdf_merger.src.ui.constants import Labels
 
+
 class FileCollectionMergeView(QWidget):
-    def __init__(self, service: PdfMergerService |  ImageMergerService, labels: Labels = None, accepted_file_types: str = "", mode: str = ""):
+    """
+    Generic view for operations that merge collections of files.
+    This view contains NO business logic.
+    """
+
+    filesSelected = pyqtSignal(list)
+    outputSelected = pyqtSignal(Path)
+    mergeRequested = pyqtSignal()
+    resetRequested = pyqtSignal()
+
+    def __init__(
+        self,
+        labels: Labels,
+        accepted_file_types: str = "",
+        accept_extensions: list[str] = None,
+        mode: str = ""
+    ):
         super().__init__()
 
-        self.fileMergerService = service
-        self.merge_job = MergeJob()
         self.labels = labels
         self.accepted_file_types = accepted_file_types
+        self.accept_extensions = accept_extensions
         self.mode = mode
 
-        self.text_box = None
-        self.save_button = None
-        self.drag_drop_view = None
-        self.page_size_combo = None
-        self.page_size_info_label = None
+        self.output_path_box: QLineEdit | None = None
+        self.drag_drop_view: FileUploadZone | None = None
+        self.reset_button: QPushButton | None = None
 
-        self.initialize_layout()
+        self._initialize_layout()
 
-    # ---------------------------------------------------------
+    # -------------------------
     # FILE HANDLING
-    # ---------------------------------------------------------
+    # -------------------------
+    def _handle_selected_files(self, files: list[str]):
+        """Forward file selection to controller and show reset button."""
+        paths = [Path(file) for file in files]
+        self.filesSelected.emit(paths)
 
-    def handle_selected_files(self, files):
-        for file in files:
-            self.merge_job.add_file(Path(file))
+        # Show reset button if files exist, hide if empty
+        self.reset_button.setVisible(bool(files))
 
-    # ---------------------------------------------------------
+    # -------------------------
     # OUTPUT DIRECTORY
-    # ---------------------------------------------------------
+    # -------------------------
+    def _select_output_directory(self):
+        directory = QFileDialog.getExistingDirectory(
+            self,
+            self.labels.CHOOSE_DIRECTORY,
+            ""
+        )
 
-    def get_output_file_path(self):
-        directory = QFileDialog.getExistingDirectory(self, self.labels.CHOOSE_DIRECTORY, "")
-        if directory:
-            save_file_path = f"{directory}/merged.pdf"
-            self.merge_job.set_output_target(Path(save_file_path))
-            self.text_box.setText(save_file_path)
+        if not directory:
+            return
 
-    # ---------------------------------------------------------
-    # RESET
-    # ---------------------------------------------------------
+        output_path = Path(directory) / "merged.pdf"
+        self.output_path_box.setText(str(output_path))
+        self.outputSelected.emit(output_path)
 
-    def reset_widget(self):
-        self.merge_job.set_output_target(Path())
-        self.merge_job.clear_list()
-        self.text_box.clear()
+    # -------------------------
+    # RESET VIEW
+    # -------------------------
+    def reset_view(self):
+        """Clear visual state only."""
+        self.output_path_box.clear()
         self.drag_drop_view.clear_area()
-        if self.page_size_combo:
-            self.page_size_combo.setCurrentIndex(0)
-        if self.page_size_info_label:
-            self.page_size_info_label.setText(
-                "Keep the original page sizes or adjust pages to a standard size."
-            )
+        self.reset_button.setVisible(False)
 
-    # ---------------------------------------------------------
-    # MERGE
-    # ---------------------------------------------------------
+    # -------------------------
+    # RESULT FEEDBACK
+    # -------------------------
+    def show_success(self, message: str):
+        QMessageBox.information(self, "Success", message)
 
-    def merge_files(self):
-        page_size_option = self.page_size_combo.currentText() if self.page_size_combo else "Keep Original Sizes"
-        if self.fileMergerService.merge_files(page_size_option):
-            popup = QMessageBox(QMessageBox.Information, "Task Successful!", "PDF files merged successfully.")
-            popup.exec_()
-            self.reset_widget()
-        else:
-            popup = QMessageBox(QMessageBox.Critical, "Task Failed!", "Failed to merge PDF files.")
-            popup.exec_()
+    def show_failure(self, message: str):
+        QMessageBox.critical(self, "Error", message)
 
-    # ---------------------------------------------------------
+    # -------------------------
     # UI LAYOUT
-    # ---------------------------------------------------------
+    # -------------------------
+    def _initialize_layout(self):
+        layout = QVBoxLayout()
+        layout.setSpacing(20)
 
-    def initialize_layout(self):
-        # ---------------- Output row ----------------
-        self.text_box = QLineEdit()
-        self.text_box.setDisabled(True)
-        self.text_box.setFixedHeight(40)
+        # -------- Save-To Area --------
+        save_frame = QFrame()
+        save_frame.setFrameShape(QFrame.StyledPanel)
+        save_frame.setStyleSheet("""
+            QFrame {
+                border: 1px solid #d1d5db;
+                border-radius: 8px;
+                background-color: #fefefe;
+            }
+        """)
+        save_layout = QHBoxLayout()
+        save_layout.setContentsMargins(10, 10, 10, 10)
+        save_layout.setSpacing(10)
+
+        self.output_path_box = QLineEdit()
+        self.output_path_box.setPlaceholderText("Select folder for saving merged file")
+        self.output_path_box.setFixedHeight(40)
+        self.output_path_box.setFont(QFont("", 11))
+        self.output_path_box.setDisabled(True)
 
         self.save_button = QPushButton(self.labels.SAVE_TO)
-        self.save_button.setFixedHeight(45)
-        self.save_button.setStyleSheet("""
-            QPushButton {
-                background-color: #3b82f6;
-                color: white;
-                font-size: 14px;
-                font-weight: bold;
+        self.save_button.setFixedHeight(40)
+        self.save_button.clicked.connect(self._select_output_directory)
+
+        save_layout.addWidget(self.save_button, 1)
+        save_layout.addWidget(self.output_path_box, 2)
+        save_frame.setLayout(save_layout)
+        layout.addWidget(save_frame)
+
+        # -------- File Upload / Drag & Drop --------
+        self.drag_drop_view = FileUploadZone(
+            accept_extensions=self.accept_extensions,
+            mode=self.mode
+        )
+        self.drag_drop_view.filesSelected.connect(self._handle_selected_files)
+
+        # Reset button on top-right inside drag-drop
+        self.reset_button = QPushButton(self.labels.RESET)
+        self.reset_button.setFixedSize(80, 30)
+        self.reset_button.setVisible(False)  # hide initially
+        self.reset_button.clicked.connect(self.resetRequested.emit)
+
+        # Overlay layout for label + reset button
+        top_row = QHBoxLayout()
+        top_row.addWidget(self.drag_drop_view.instruction_label, alignment=Qt.AlignLeft)
+        top_row.addWidget(self.reset_button, alignment=Qt.AlignRight)
+        top_row.setContentsMargins(5, 5, 5, 0)
+
+        # Final layout combining top row + drag-drop area
+        drag_drop_layout = QVBoxLayout()
+        drag_drop_layout.addLayout(top_row)
+        drag_drop_layout.addWidget(self.drag_drop_view)
+
+        drag_drop_container = QFrame()
+        drag_drop_container.setLayout(drag_drop_layout)
+        drag_drop_container.setFrameShape(QFrame.StyledPanel)
+        drag_drop_container.setStyleSheet("""
+            QFrame {
+                border: 1px solid #d1d5db;
                 border-radius: 8px;
+                background-color: #fefefe;
             }
-            QPushButton:hover { background-color: #2563eb; }
-            QPushButton:pressed { background-color: #1d4ed8; }
         """)
-        self.save_button.clicked.connect(self.get_output_file_path)
 
-        horizontal_box_layout = QHBoxLayout()
-        horizontal_box_layout.addWidget(self.text_box, 2)
-        horizontal_box_layout.addWidget(self.save_button, 1)
+        layout.addWidget(drag_drop_container)
 
-        # ---------------- File Upload ----------------
-        self.drag_drop_view = FileUploadZone(accept=self.accepted_file_types, mode=self.mode)
-        self.drag_drop_view.filesSelected.connect(self.handle_selected_files)
-
-        # ---------------- Bottom Buttons ----------------
-        delete_button = QPushButton(self.labels.RESET)
-        delete_button.setFixedHeight(45)
-        delete_button.setStyleSheet("""
-            QPushButton { background-color: #ef4444; color: white; font-weight: bold; font-size: 14px; border-radius: 8px; }
-            QPushButton:hover { background-color: #dc2626; }
-            QPushButton:pressed { background-color: #b91c1c; }
-        """)
-        delete_button.clicked.connect(self.reset_widget)
-
+        # -------- Merge Button --------
         merge_button = QPushButton(self.labels.MERGE)
         merge_button.setFixedHeight(45)
-        merge_button.setStyleSheet("""
-            QPushButton { background-color: #22c55e; color: white; font-weight: bold; font-size: 14px; border-radius: 8px; }
-            QPushButton:hover { background-color: #16a34a; }
-            QPushButton:pressed { background-color: #15803d; }
-        """)
-        merge_button.clicked.connect(self.merge_files)
+        merge_button.clicked.connect(self.mergeRequested.emit)
+        layout.addWidget(merge_button)
 
-        call_to_action_layout = QHBoxLayout()
-        call_to_action_layout.addWidget(delete_button)
-        call_to_action_layout.addWidget(merge_button)
+        self.setLayout(layout)
 
-        # ---------------- Main Layout ----------------
-        vertical_layout = QVBoxLayout()
-        vertical_layout.addLayout(horizontal_box_layout)
-        vertical_layout.addWidget(self.drag_drop_view)
-        vertical_layout.addLayout(call_to_action_layout)
-
-        self.setLayout(vertical_layout)
-
+    # -------------------------
+    # COMPATIBILITY
+    # -------------------------
     def get_widget(self):
         return self

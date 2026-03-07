@@ -2,13 +2,15 @@
 
 import sys
 from PyQt5.QtWidgets import (
-    QMainWindow, 
-    QApplication, 
-    QWidget, 
-    QPushButton, 
+    QMainWindow,
+    QApplication,
+    QWidget,
     QVBoxLayout,
-    QHBoxLayout, 
-    QStackedWidget
+    QStackedWidget,
+    QAction,
+    QMessageBox,
+    QLabel,
+    QPushButton
 )
 
 from PyQt5.QtCore import Qt
@@ -20,27 +22,66 @@ from pdf_merger.src.ui.themes.theme_provider import ThemeProvider
 from pdf_merger.src.ui.view_aggregator import ViewAggregator
 from pdf_merger.src.ui.constants import Labels, LayoutConfig
 
-# Keep track of active mode
-MODE_PDF_MERGE = 0
-MODE_IMAGE_TO_PDF = 1
 
-class MergerApp(QMainWindow):
-    """Main window for the PDF Merger application using button-based tabs."""
+class WelcomeView(QWidget):
+    """Simple welcome screen with operation shortcuts."""
+
     def __init__(self):
         super().__init__()
+
+        layout = QVBoxLayout()
+        layout.setAlignment(Qt.AlignCenter)
+
+        title = QLabel("PDF Merger")
+        title.setAlignment(Qt.AlignCenter)
+        title.setStyleSheet("font-size: 28px; font-weight: bold;")
+
+        subtitle = QLabel("Choose an operation to begin")
+        subtitle.setAlignment(Qt.AlignCenter)
+        subtitle.setStyleSheet("font-size: 14px; color: gray;")
+
+        self.merge_pdf_btn = QPushButton("Merge PDFs")
+        self.image_to_pdf_btn = QPushButton("Images → PDF")
+
+        self.merge_pdf_btn.setMinimumHeight(40)
+        self.image_to_pdf_btn.setMinimumHeight(40)
+
+        layout.addWidget(title)
+        layout.addSpacing(10)
+        layout.addWidget(subtitle)
+        layout.addSpacing(30)
+        layout.addWidget(self.merge_pdf_btn)
+        layout.addWidget(self.image_to_pdf_btn)
+
+        self.setLayout(layout)
+
+
+class MergerApp(QMainWindow):
+    """Main window with operation registry and welcome screen."""
+
+    def __init__(self):
+        super().__init__()
+
         self._labels = Labels()
         self._layout_config = LayoutConfig()
-        self._view_aggregator = ViewAggregator(
-            self._labels, 
-            pdf_merger_service=PdfMergerService(), 
-            image_merger_service=ImageMergerService())
 
-        self.active_mode_index = MODE_PDF_MERGE
+        self._view_aggregator = ViewAggregator(
+            self._labels,
+            pdf_merger_service=PdfMergerService(),
+            image_merger_service=ImageMergerService()
+        )
+
+        self._operations = []
         self._setup_ui()
 
+    # -------------------------
+    # UI Setup
+    # -------------------------
+
     def _setup_ui(self):
-        """Sets up the main window UI."""
+
         self.setWindowTitle(self._labels.APP_NAME)
+
         self.setGeometry(
             self._layout_config.WINDOW_X_POS,
             self._layout_config.WINDOW_Y_POS,
@@ -48,63 +89,129 @@ class MergerApp(QMainWindow):
             self._layout_config.WINDOW_HEIGHT
         )
 
-        # Main container widget
+        self._create_menu_bar()
+
         central_widget = QWidget()
-        main_layout = QVBoxLayout()
-        central_widget.setLayout(main_layout)
+        layout = QVBoxLayout()
+        central_widget.setLayout(layout)
+
         self.setCentralWidget(central_widget)
 
-        # Mode Buttons (like web tabs)
-        self.mode_buttons_layout = QHBoxLayout()
-        self.merge_pdf_btn = QPushButton(self._labels.MERGE_PDF_TAB_TITLE)
-        self.image_to_pdf_btn = QPushButton(self._labels.IMAGE_TO_PDF_TAB_TITLE)
-
-        self._setup_mode_button(self.merge_pdf_btn, index=MODE_PDF_MERGE)
-        self._setup_mode_button(self.image_to_pdf_btn, index=MODE_IMAGE_TO_PDF)
-
-        self.mode_buttons_layout.addWidget(self.merge_pdf_btn)
-        self.mode_buttons_layout.addWidget(self.image_to_pdf_btn)
-        main_layout.addLayout(self.mode_buttons_layout)
-
-        # Stacked widget for pages
         self.stacked = QStackedWidget()
-        self.stacked.addWidget(self._view_aggregator.image_to_pdf_merge_view.get_widget())
-        self.stacked.addWidget(self._view_aggregator.pdf_collection_merge_view.get_widget())
-        main_layout.addWidget(self.stacked)
+        layout.addWidget(self.stacked)
 
-        # Set default active
-        self._update_mode_buttons()
+        # Welcome screen
+        self.welcome_view = WelcomeView()
+        self.welcome_index = self.stacked.addWidget(self.welcome_view)
 
-    def _setup_mode_button(self, button: QPushButton, index: int):
-        """Style a mode button and connect click to stacked widget."""
-        button.setCheckable(True)
-        button.setCursor(Qt.PointingHandCursor)
-        button.setMinimumHeight(50)
-        button.clicked.connect(lambda checked, i=index: self._switch_mode(i))
+        # Register operations
+        self._register_operations()
 
-    def _switch_mode(self, index: int):
-        """Switch stacked widget page and update button styles."""
-        if index == self.active_mode_index:
-            return
-        
-        self.active_mode_index = index
+        # Show welcome screen first
+        self.stacked.setCurrentIndex(self.welcome_index)
+
+    # -------------------------
+    # Menu Bar
+    # -------------------------
+
+    def _create_menu_bar(self):
+
+        menu_bar = self.menuBar()
+
+        # File
+        file_menu = menu_bar.addMenu("File")
+
+        exit_action = QAction("Exit", self)
+        exit_action.triggered.connect(self.close)
+
+        file_menu.addAction(exit_action)
+
+        # Operations
+        self.operations_menu = menu_bar.addMenu("Operations")
+
+        # Help
+        help_menu = menu_bar.addMenu("Help")
+
+        how_to_action = QAction("How to use", self)
+        how_to_action.triggered.connect(self._show_help)
+
+        about_action = QAction("About", self)
+        about_action.triggered.connect(self._show_about)
+
+        help_menu.addAction(how_to_action)
+        help_menu.addAction(about_action)
+
+    # -------------------------
+    # Operation Registration
+    # -------------------------
+
+    def _register_operations(self):
+
+        self._register_operation(
+            "Merge PDFs",
+            self._view_aggregator.pdf_collection_merge_view.get_widget()
+        )
+
+        self._register_operation(
+            "Images → PDF",
+            self._view_aggregator.image_to_pdf_merge_view.get_widget()
+        )
+
+    def _register_operation(self, name: str, widget: QWidget):
+
+        index = self.stacked.addWidget(widget)
+
+        action = QAction(name, self)
+        action.triggered.connect(lambda _, i=index: self._switch_operation(i))
+
+        self.operations_menu.addAction(action)
+
+        self._operations.append({
+            "name": name,
+            "widget": widget,
+            "index": index
+        })
+
+        # Connect welcome screen buttons
+        if name == "Merge PDFs":
+            self.welcome_view.merge_pdf_btn.clicked.connect(
+                lambda: self._switch_operation(index)
+            )
+
+        if name == "Images → PDF":
+            self.welcome_view.image_to_pdf_btn.clicked.connect(
+                lambda: self._switch_operation(index)
+            )
+
+    # -------------------------
+    # Navigation
+    # -------------------------
+
+    def _switch_operation(self, index: int):
         self.stacked.setCurrentIndex(index)
-        self._update_mode_buttons()
 
-    def _update_mode_buttons(self):
-        """Update the styles of the buttons based on active mode."""
-        self.merge_pdf_btn.setChecked(self.active_mode_index == 0)
-        self.image_to_pdf_btn.setChecked(self.active_mode_index == 1)
+    # -------------------------
+    # Help Dialogs
+    # -------------------------
 
-        self.merge_pdf_btn.setProperty("active", self.active_mode_index == 0)
-        self.image_to_pdf_btn.setProperty("active", self.active_mode_index == 1)
+    def _show_help(self):
+        QMessageBox.information(
+            self,
+            "How to Use",
+            "1. Choose an operation.\n"
+            "2. Drag and drop files.\n"
+            "3. Select where to save.\n"
+            "4. Click Merge."
+        )
 
-        # Force re-polish so QSS reacts to property change 
-        # TODO: Note expensive operation, optimize it
-        for btn in [self.merge_pdf_btn, self.image_to_pdf_btn]:
-            btn.style().unpolish(btn)
-            btn.style().polish(btn)
-            btn.update()
+    def _show_about(self):
+        QMessageBox.information(
+            self,
+            "About",
+            f"{self._labels.APP_NAME}\n\n"
+            "A simple desktop utility for merging PDFs and images."
+        )
+
 
 def main():
     app = QApplication(sys.argv)
