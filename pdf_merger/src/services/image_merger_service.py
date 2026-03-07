@@ -1,48 +1,45 @@
 # Author: Ayush Kaushik
-from typing import List
-
-from pathlib import Path
 import img2pdf
-from .abstract_file_merger_service import AbstractFileMergerService
+from pdf_merger.src.data.merge_job import MergeJob
 
 '''
     Operations related to merging Images to PDF.
 '''
 
-
-class ImageMergerService(AbstractFileMergerService):
-    def __init__(self, merger: img2pdf, file_list: List[Path], target_path: Path):
-        super().__init__({
-            ".jpg": ".jpg",
-            ".jpeg": ".jpeg",
-            ".png": ".png"
-        },
-            file_list,
-            target_path)
-
-        self.merger = merger
-        self.file_list = file_list if file_list is not None else []
-        self.target_file_path = target_path
+class ImageMergerService:
+    def __init__(self, merger_module=img2pdf):
+        self.allowed_file_extensions = (".jpg", ".jpeg", ".png")
+        self.merger_module = merger_module
 
     @staticmethod
     def remove_prefix(text: str, prefix: str) -> str:
-        """
-        Removes the prefix from the given text if present.
-        """
+        """Removes the prefix from the given text if present."""
         if text.startswith(prefix):
             return text[len(prefix):]
         return text
 
-    def merge_files(self) -> bool:
-        if not self.target_file_path:
+    def merge_files(self, merge_job: MergeJob) -> bool:
+        """
+        Merges the files in the merge_job's file list into a single PDF at target_path.
+        """
+        file_list = merge_job.files
+        target_path = merge_job.output_file
+
+        if not file_list:
+            print("No files to merge.")
+            return False
+
+        if not target_path:
             print("Target file path is not set.")
             return False
+
         try:
-            with open(self.target_file_path, "ab") as f:
-                f.write(self.merger.convert(self.file_list))
-            print("Files merged successfully.")
+            with open(target_path, "ab") as f:
+                # img2pdf requires paths as strings
+                f.write(self.merger_module.convert([str(p) for p in file_list]))
+            print("Images merged successfully into PDF.")
             return True
-        except Exception as exception:
-            print("Exception occurred during merging images")
-            print(exception)
+        except Exception as e:
+            print("Exception occurred during merging images:")
+            print(e)
             return False

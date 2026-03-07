@@ -1,0 +1,25 @@
+/* Active mode button */
+QPushButton[active="true"] {
+    background-color: #3b82f6;
+    color: white;
+    font-weight: 75;        /* bold */
+    font-size: 16px;
+    border-radius: 12px;
+}
+
+QPushButton[active="true"]:hover {
+    background-color: #2563eb;
+}
+
+/* Inactive mode button */
+QPushButton[active="false"] {
+    background-color: #e5e7eb;
+    color: #6b7280;
+    font-weight: 50;        /* normal */
+    font-size: 16px;
+    border-radius: 12px;
+}
+
+QPushButton[active="false"]:hover {
+    background-color: #d1d5db;
+}
